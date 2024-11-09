@@ -7,6 +7,11 @@ template <typename T>
 SinglyLinkedListNode<T>::SinglyLinkedListNode(T newData) : data(newData), next(nullptr) {};
 
 template <typename T>
+T SinglyLinkedListNode<T>::getData() {
+  return data;
+}
+
+template <typename T>
 SinglyLinkedList<T>::SinglyLinkedList() : head (nullptr), size(0) {};
 
 template <typename T>
@@ -268,6 +273,40 @@ void SinglyLinkedList<T>::deleteByValue(const T& target) {
   current->next = current->next->next;
   delete (targetNode);
   size--;
+}
+
+template <typename T>
+SinglyLinkedListNode<T>* SinglyLinkedList<T>::getHead() {
+  return head;
+}
+
+template <typename T>
+SinglyLinkedListNode<T>* SinglyLinkedList<T>::getTail() {
+  SinglyLinkedListNode<T>* current = head;
+  while (current->next) {
+    current = current->next;
+  }
+  return current;
+}
+
+template <typename T>
+SinglyLinkedListNode<T>* SinglyLinkedList<T>::getAt(const int position) {
+  if (position < 1) {
+    return nullptr;
+  }
+  if (!head) {
+    return nullptr;
+  }
+  SinglyLinkedListNode<T>* current = head;
+  for (int i = 1; current && i < position; i++) {
+    current = current->next;
+  }
+  return current;
+}
+
+template <typename T>
+int SinglyLinkedList<T>::getSize() {
+  return size;
 }
 
 template <typename T>
