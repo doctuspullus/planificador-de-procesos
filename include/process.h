@@ -82,4 +82,8 @@ class Process {
   /// @param other El otro proceso con el que se compara.
   /// @return True si este tiene mayor prioridad que el otro; false si no.
   bool operator>(const Process& other);
+  
+  /// @brief Metodo multiplataforma para pausar el programa durante una cierta cantidad de segundos.
+  /// @param seconds Los segundos por los que el programa debe de pausarse.
+  void sleepInSeconds(int seconds);
 };

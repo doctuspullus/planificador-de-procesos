@@ -72,7 +72,7 @@ bool Process::executeNextInstruction() {
       instructionIndex++;
       return false;
     }
-    sleep(1);
+    sleepInSeconds(1);
     remainingQuantum--;
     instructionIndex++;
     return true;
@@ -110,4 +110,12 @@ bool Process::operator<(const Process& other) {
 
 bool Process::operator>(const Process& other) {
   return this->priority > other.priority;
+}
+
+void sleepInSeconds(int seconds) {
+#ifdef _WINDOWS32
+  Sleep(seconds * 1000);
+#else
+  sleep(seconds);
+#endif
 }
