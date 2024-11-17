@@ -79,7 +79,7 @@ bool Process::executeNextInstruction() {
 }
 
 bool Process::hasMoreInstrucions() const {
-  return instructionIndex >= instructions->getSize();
+  return instructionIndex < instructions->getSize();
 }
 void Process::resetExecution() {
   instructionIndex = 0;
