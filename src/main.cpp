@@ -1,8 +1,7 @@
-#include <iostream>
-
-using namespace std;
+#include <tests.h>
 
 int main() {
-  cout << "hola mundo" << endl;
+  ProcessTests tests;
+  tests.runAllTests();
   return 0;
 }
