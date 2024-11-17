@@ -116,12 +116,14 @@ bool Process::isInIO() const {
 void Process::startIO() {
   IOPending = true;
   state = ProcessState::BLOCKED;
+  sleepInSeconds(1.5);
 }
 
 void Process::finishIO() {
   if (IOPending) {
     IOPending = false;
     state = ProcessState::READY;
+    sleepInSeconds(1.5);
   }
 }
 
@@ -133,7 +135,7 @@ bool Process::operator>(const Process& other) {
   return this->priority > other.priority;
 } 
 
-void Process::sleepInSeconds(int seconds) {
+void Process::sleepInSeconds(float seconds) {
 #ifdef _WINDOWS32
   Sleep(seconds * 1000);
 #else

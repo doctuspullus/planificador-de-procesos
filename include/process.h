@@ -88,5 +88,5 @@ class Process {
   
   /// @brief Metodo multiplataforma para pausar el programa durante una cierta cantidad de segundos.
   /// @param seconds Los segundos por los que el programa debe de pausarse.
-  void sleepInSeconds(int seconds);
+  void sleepInSeconds(float seconds);
 };
