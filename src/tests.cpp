@@ -98,6 +98,8 @@ void ProcessTests::testInstructions() {
     color("yellow", "\nInstruction Tests:", true);
     
     Process p("test", 1);
+    printTestResult(!p.executeNextInstruction(), "Empty process should not execute");
+
     p.addInstruction("i1");
     p.addInstruction("i2");
     

@@ -34,6 +34,9 @@ Process::Process()
   : name("null"), priority(0), 
     instructionIndex(0), remainingQuantum(0), IOPending(false) {
   instructions = new SinglyLinkedList<string>();
+  if (!instructions) {
+    throw runtime_error("Failed to allocate memory for instructions list");
+  }
   state = ProcessState::READY;
 }
 
@@ -41,6 +44,9 @@ Process::Process(const string newName, int newPriority)
   : name(newName), priority(newPriority),
     instructionIndex(0), remainingQuantum(0), IOPending(false) {
   instructions = new SinglyLinkedList<string>();
+  if (!instructions) {
+    throw runtime_error("Failed to allocate memory for instructions list");
+  }
   state = ProcessState::READY;
 }
 
@@ -69,9 +75,15 @@ void Process::addInstruction(const string instruction) {
 }
 
 bool Process::executeNextInstruction() {
+  if (!instructions) {
+    return false;
+  }
   if (this->hasMoreInstrucions()) {
-    string currentInstruction = instructions->getAt(instructionIndex)->getData();
-    if (currentInstruction == "io") {
+    SinglyLinkedListNode<string>* node = instructions->getAt(instructionIndex);
+    if (!node) {
+      return false;
+    }
+    if (node->getData() == "io") {
       startIO();
       instructionIndex++;
       return false;
