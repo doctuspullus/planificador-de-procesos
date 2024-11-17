@@ -116,7 +116,7 @@ bool Process::operator>(const Process& other) {
   return this->priority > other.priority;
 }
 
-void sleepInSeconds(int seconds) {
+void Process::sleepInSeconds(int seconds) {
 #ifdef _WINDOWS32
   Sleep(seconds * 1000);
 #else
