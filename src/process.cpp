@@ -31,14 +31,16 @@ ostream& operator<<(ostream& os, const ProcessState& state) {
 }
 
 Process::Process() 
-  : name("null"), priority(0), instructions(nullptr), 
+  : name("null"), priority(0), 
     instructionIndex(0), remainingQuantum(0), IOPending(false) {
+  instructions = new SinglyLinkedList<string>();
   state = ProcessState::READY;
 }
 
 Process::Process(const string newName, int newPriority) 
-  : name(newName), priority(newPriority), instructions(nullptr),
+  : name(newName), priority(newPriority),
     instructionIndex(0), remainingQuantum(0), IOPending(false) {
+  instructions = new SinglyLinkedList<string>();
   state = ProcessState::READY;
 }
 
