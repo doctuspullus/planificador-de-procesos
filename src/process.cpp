@@ -32,7 +32,7 @@ ostream& operator<<(ostream& os, const ProcessState& state) {
 
 Process::Process() 
   : name("null"), priority(0), 
-    instructionIndex(0), remainingQuantum(0), IOPending(false) {
+    instructionIndex(1), remainingQuantum(0), IOPending(false) {
   instructions = new SinglyLinkedList<string>();
   if (!instructions) {
     throw runtime_error("Failed to allocate memory for instructions list");
@@ -42,7 +42,7 @@ Process::Process()
 
 Process::Process(const string newName, int newPriority) 
   : name(newName), priority(newPriority),
-    instructionIndex(0), remainingQuantum(0), IOPending(false) {
+    instructionIndex(1), remainingQuantum(0), IOPending(false) {
   instructions = new SinglyLinkedList<string>();
   if (!instructions) {
     throw runtime_error("Failed to allocate memory for instructions list");
@@ -70,12 +70,16 @@ void Process::setState(ProcessState newState) {
   state = newState;
 }
 
+void Process::setQuantum(float newQuantum) {
+  remainingQuantum = newQuantum;
+}
+
 void Process::addInstruction(const string instruction) {
   instructions->insertTail(instruction);
 }
 
 bool Process::executeNextInstruction() {
-  if (!instructions) {
+  if (!instructions || remainingQuantum <= 0) {
     return false;
   }
   if (this->hasMoreInstrucions()) {
@@ -83,9 +87,8 @@ bool Process::executeNextInstruction() {
     if (!node) {
       return false;
     }
-    if (node->getData() == "io") {
+    if (node->getData() == "e/s") {
       startIO();
-      instructionIndex++;
       return false;
     }
     sleepInSeconds(1);
@@ -97,10 +100,10 @@ bool Process::executeNextInstruction() {
 }
 
 bool Process::hasMoreInstrucions() const {
-  return instructionIndex < instructions->getSize();
+  return instructionIndex <= instructions->getSize();
 }
 void Process::resetExecution() {
-  instructionIndex = 0;
+  instructionIndex = 1;
   remainingQuantum = 0;
   IOPending = false;
   state = ProcessState::READY;
@@ -116,8 +119,10 @@ void Process::startIO() {
 }
 
 void Process::finishIO() {
-  IOPending = false;
-  state = ProcessState::READY;
+  if (IOPending) {
+    IOPending = false;
+    state = ProcessState::READY;
+  }
 }
 
 bool Process::operator<(const Process& other) {
@@ -126,7 +131,7 @@ bool Process::operator<(const Process& other) {
 
 bool Process::operator>(const Process& other) {
   return this->priority > other.priority;
-}
+} 
 
 void Process::sleepInSeconds(int seconds) {
 #ifdef _WINDOWS32

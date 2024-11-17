@@ -102,6 +102,7 @@ void ProcessTests::testInstructions() {
 
     p.addInstruction("i1");
     p.addInstruction("i2");
+    p.setQuantum(2);
     
     printTestResult(p.hasMoreInstrucions() == true, "Should have instructions");
     printTestResult(p.executeNextInstruction() == true, "Should execute normal instruction");
@@ -115,11 +116,12 @@ void ProcessTests::testIOOperations() {
     color("yellow", "\nIO Operation Tests:", true);
     
     Process p("test", 1);
-    p.addInstruction("io");
+    p.addInstruction("e/s");
+    p.setQuantum(5);
     
     printTestResult(p.isInIO() == false, "Should not be in IO initially");
     
-    p.executeNextInstruction();  // This should trigger IO
+    p.executeNextInstruction();  
     printTestResult(p.isInIO() == true, "Should be in IO after IO instruction");
     printTestResult(p.getState() == ProcessState::BLOCKED, "Should be BLOCKED during IO");
     
@@ -145,6 +147,7 @@ void ProcessTests::testQuantumManagement() {
     p.addInstruction("i1");
     p.addInstruction("i1");
     p.addInstruction("i1");
+    p.setQuantum(3);
     
     bool firstExecution = p.executeNextInstruction();
     printTestResult(firstExecution == true, "Should execute first instruction");
