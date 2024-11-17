@@ -44,6 +44,10 @@ Process::Process(const string newName, int newPriority)
   state = ProcessState::READY;
 }
 
+Process::~Process() {
+  delete instructions;
+}
+
 const string Process::getName() const {
   return name;
 }
