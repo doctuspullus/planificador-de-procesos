@@ -53,6 +53,9 @@ class Process {
   /// @brief Setter del estado del proceso.
   /// @param newState El nuevo estado al que pasa el proceso.
   void setState(ProcessState newState);
+  /// @brief Getter del quantum restante.
+  /// @return El quantum restante.
+  float getQuantum();
   /// @brief Setter para el quantum del proceso.
   /// @param quantum El nuevo quantum del proceso.
   void setQuantum(float newQuantum);
