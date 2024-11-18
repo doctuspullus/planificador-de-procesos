@@ -102,7 +102,6 @@ void ProcessTests::testInstructions() {
 
     p.addInstruction("i1");
     p.addInstruction("i2");
-    p.setQuantum(2);
     
     printTestResult(p.hasMoreInstrucions() == true, "Should have instructions");
     printTestResult(p.executeNextInstruction() == true, "Should execute normal instruction");
@@ -115,19 +114,54 @@ void ProcessTests::testInstructions() {
 void ProcessTests::testIOOperations() {
     color("yellow", "\nIO Operation Tests:", true);
     
+    // Prueba 1: E/S exitosa con suficiente quantum
     Process p("test", 1);
     p.addInstruction("e/s");
-    p.setQuantum(5);
     
     printTestResult(p.isInIO() == false, "Should not be in IO initially");
     
     p.executeNextInstruction();  
     printTestResult(p.isInIO() == true, "Should be in IO after IO instruction");
     printTestResult(p.getState() == ProcessState::BLOCKED, "Should be BLOCKED during IO");
+    printTestResult(abs(p.getQuantum() - (5 - 1.5)) < 0.001, "Should consume 1.5 quantum units per IO");
     
-    p.finishIO();
-    printTestResult(p.isInIO() == false, "Should not be in IO after finishing");
-    printTestResult(p.getState() == ProcessState::READY, "Should be READY after IO completion");
+    // Prueba 2: E/S fallida por falta de quantum
+    Process p2("test2", 1);
+    p2.addInstruction("e/s");
+    p2.setQuantum(1);
+    
+    p2.executeNextInstruction();
+    printTestResult(p2.isInIO() == false, "Should not enter IO with insufficient quantum");
+    printTestResult(p2.getState() == ProcessState::RUNNING_PREEMPTED, "Should be in RUNNING_PREEMPTED state due to insufficent quantum for IO");
+    
+    // Prueba 3: Finalizacion de E/S
+    Process p3("test3", 1);
+    p3.addInstruction("e/s");
+    p3.addInstruction("e/s");
+    
+    p3.executeNextInstruction();
+    float quantumBeforeFinish = p3.getQuantum();
+    p3.executeNextInstruction();
+    
+    printTestResult(p3.isInIO() == false, "Should not be in IO after finishing");
+    printTestResult(p3.getState() == ProcessState::READY, "Should be in READY state after IO completion");
+    printTestResult(abs(p3.getQuantum() - (quantumBeforeFinish - 1.5)) < 0.001, "Should consume 1.5 quantum units for IO finish");
+    
+    // Prueba 4: multiples instrucciones
+    Process p4("test4", 1);
+    p4.addInstruction("i1");
+    p4.addInstruction("e/s");
+    p4.addInstruction("e/s");
+    p4.addInstruction("i1");
+
+    printTestResult(p4.executeNextInstruction() == true, "Should execute normal instruction before IO");
+    printTestResult(p4.executeNextInstruction() == false, "Should return false when starting IO");
+    printTestResult(p4.executeNextInstruction() == true, "Should return true when ending IO");
+    printTestResult(p4.getState() == ProcessState::READY, "Should return to READY state after ending IO");
+    printTestResult(abs(p4.getQuantum() - 1) < 0.001, "Should have expected quantum after full sequence");
+    printTestResult(p4.executeNextInstruction() == true, "Should execute last instruction");
+    printTestResult(p4.getState() == ProcessState::FINISHED, "Should be in FINISHED state after last instruction");
+    printTestResult(p4.executeNextInstruction() == false && p4.getState() == ProcessState::FINISHED, "Should not try to execute another instruction, and should not try to modify state, after last instruction");
 }
 
 void ProcessTests::testPriorityComparisons() {
@@ -147,7 +181,7 @@ void ProcessTests::testQuantumManagement() {
     p.addInstruction("i1");
     p.addInstruction("i1");
     p.addInstruction("i1");
-    p.setQuantum(3);
+    p.setQuantum(2);
     
     bool firstExecution = p.executeNextInstruction();
     printTestResult(firstExecution == true, "Should execute first instruction");
@@ -156,9 +190,11 @@ void ProcessTests::testQuantumManagement() {
     printTestResult(secondExecution == true, "Should execute second instruction");
     
     bool thirdExecution = p.executeNextInstruction();
-    printTestResult(thirdExecution == true, "Should execute third instruction");
+    printTestResult(thirdExecution == false, "Should not execute with quantum depleted");
     
-    printTestResult(p.hasMoreInstrucions() == false, "Should have no more instructions after executing all");
+    printTestResult(p.getState() == ProcessState::RUNNING_PREEMPTED, "Should be in RUNNING_PREEMPTED state when quantum is depleted");
+
+    printTestResult(p.hasMoreInstrucions() == true, "Should have more instructions after not executing all");
 }
 
 void ProcessTests::printTestResult(bool passed, const string& testName) {
