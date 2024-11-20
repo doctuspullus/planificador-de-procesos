@@ -34,17 +34,28 @@
     }
 #endif
 
-template <typename T>
-bool assertEquals(T expectedValue, T actualValue, std::string testName) {
-    if (expectedValue == actualValue) {
-        color("green", testName + " OK", true);
-        return true;
+Tests::Tests() : testsRun(0), testsPassed(0) {}
+
+void Tests::printTestResult(bool passed, const string& testName) {
+    testsRun++;
+    if (passed) {
+        testsPassed++;
+        color("green", "✓ " + testName, true);
+    } else {
+        color("red", "✗ " + testName, true);
     }
-    color("red", testName + " ERROR: Mismatch", true);
-    return false;
 }
 
-ProcessTests::ProcessTests() : testsRun(0), testsPassed(0) {}
+void Tests::printTestSummary() {
+    cout << "\nTest Summary:\n";
+    color("cyan", "Total tests: " + to_string(testsRun), true);
+    if (testsPassed == testsRun) {
+        color("green", "All tests passed!", true);
+    } else {
+        color("red", "Failed tests: " + to_string(testsRun - testsPassed), true);
+        color("green", "Passed tests: " + to_string(testsPassed), true);
+    }
+}
 
 void ProcessTests::runAllTests() {
     color("cyan", "\n=== Process Class Tests ===\n", true);
@@ -195,25 +206,4 @@ void ProcessTests::testQuantumManagement() {
     printTestResult(p.getState() == ProcessState::RUNNING_PREEMPTED, "Should be in RUNNING_PREEMPTED state when quantum is depleted");
 
     printTestResult(p.hasMoreInstrucions() == true, "Should have more instructions after not executing all");
-}
-
-void ProcessTests::printTestResult(bool passed, const string& testName) {
-    testsRun++;
-    if (passed) {
-        testsPassed++;
-        color("green", "✓ " + testName, true);
-    } else {
-        color("red", "✗ " + testName, true);
-    }
-}
-
-void ProcessTests::printTestSummary() {
-    cout << "\nTest Summary:\n";
-    color("cyan", "Total tests: " + to_string(testsRun), true);
-    if (testsPassed == testsRun) {
-        color("green", "All tests passed!", true);
-    } else {
-        color("red", "Failed tests: " + to_string(testsRun - testsPassed), true);
-        color("green", "Passed tests: " + to_string(testsPassed), true);
-    }
 }
