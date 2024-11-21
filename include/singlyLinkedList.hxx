@@ -19,6 +19,10 @@ public:
     /// @brief SinglyLinkedListNode parameterized constructor.
     /// @param newData The new data to be stored in the node's data attribute.
     SinglyLinkedListNode(T newData);
+
+    /// @brief Gets the data within the node;
+    /// @return Node's data.
+    T getData();
 };
 
 /// @brief SinglyLinkedList class: implementation of a singly linked list. Contains a pointer to its head and a counter for the number of nodes.
@@ -71,6 +75,20 @@ public:
     /// @brief Deletes a node with a specific value.
     void deleteByValue(const T& target);
 
+    /// @brief Finds and returns the list's head.
+    /// @return A pointer to the list's head.
+    SinglyLinkedListNode<T>* getHead();
+    /// @brief Finds and returns the list's tail.
+    /// @return A pointer to the list's tail.
+    SinglyLinkedListNode<T>* getTail();
+    /// @brief Finds and returns the node found at the position specified (uses 1-indexing).
+    /// @param position The position of the node to search.
+    /// @return A pointer to the node found at that position. nullptr if node doesn't exist.
+    SinglyLinkedListNode<T>* getAt(const int position);
+    /// @brief Gets the list's size.
+    /// @return The list's size.
+    int getSize();
+    
     /// @brief Searches for a node with a specific value.
     SinglyLinkedListNode<T>* search(const T& target) const;
     /// @brief Sorts the list using bubble sort.
