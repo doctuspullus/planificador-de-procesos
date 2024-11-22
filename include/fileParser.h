@@ -15,7 +15,7 @@ class FileParser {
     ~FileParser();
 
     bool parseFile();
-    singlyLinkedList* getProcesses();
+    SinglyLinkedList* getProcesses();
 
 };
 
