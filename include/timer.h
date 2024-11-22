@@ -24,4 +24,6 @@ class Timer {
 		/// @brief Revisa el tiempo que ha pasado desde que se inició el temporizador. 
 		/// @return true si ha pasado el tiempo necesario o más para desbloquear; false si no.
 		bool checkTime();
+		
+		timePoint getStartTime();
 };

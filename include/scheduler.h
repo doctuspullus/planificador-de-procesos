@@ -3,6 +3,7 @@
 #include <singlyLinkedList.hxx>
 #include <binarySearchTree.hxx>
 #include <process.h>
+#include <timer.h>
 
 class Scheduler {
   protected:
@@ -11,6 +12,7 @@ class Scheduler {
     SinglyLinkedList<Process>* finishedProcesses;
     
     Process* currentProcess;            
+		Timer* ioTimer;
 
     virtual Process* selectNextProcess() = 0;
     void preemptCurrentProcess();
@@ -18,9 +20,11 @@ class Scheduler {
 
   public:
     Scheduler();
-    ~Scheduler();
+    virtual ~Scheduler();
+		
+		void run();
 
-    void addProcess(Process* newProcess);
+    virtual void addProcess(Process* newProcess);
     void removeProcess(Process* process);
 
     void schedule();
@@ -32,6 +36,7 @@ class Scheduler {
     void moveToFinished(Process* process);
 
     bool hasUnfinishedProcesses() const;
+		void clearTimer();
     void displayStatus() const;
 };
 
@@ -45,6 +50,7 @@ class RoundRobin : public Scheduler {
 	
 	public:
 		RoundRobin();
+		~RoundRobin() override;
 };
 
 class Priority : public Scheduler {
@@ -56,5 +62,10 @@ class Priority : public Scheduler {
 	
 	public:
 		Priority();
-		void adjustProcessPriority(Process& process);
+		~Priority() override;
+		
+		void calculateInitialPriority(Process& process);
+		void moveToBlocked(Process* process);
+		void addProcess(Process* newProcess) override;
+		void adjustProcessPriority(Process& process, int newPriority);
 };

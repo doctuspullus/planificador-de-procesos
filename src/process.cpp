@@ -51,6 +51,7 @@ Process::Process(const string newName, int newPriority)
 }
 
 Process::~Process() {
+	cout << "Process" << endl;
   delete instructions;
 }
 
@@ -62,6 +63,10 @@ int Process::getPriority() const {
   return priority;
 }
 
+void Process::setPriority(int newPriority) {
+	priority = newPriority;
+}
+
 ProcessState Process::getState() const {
   return state;
 }
@@ -70,12 +75,20 @@ void Process::setState(ProcessState newState) {
   state = newState;
 }
 
+int Process::getInstructionIndex() {
+	return instructionIndex;
+}
+
 float Process::getQuantum() {
   return remainingQuantum;
 }
 
 void Process::setQuantum(float newQuantum) {
   remainingQuantum = newQuantum;
+}
+
+SinglyLinkedList<string>* Process::getInstructions() {
+	return instructions;
 }
 
 void Process::addInstruction(const string instruction) {
@@ -162,4 +175,28 @@ void Process::sleepInSeconds(float seconds) {
 #else
   sleep(seconds);
 #endif
+}
+
+bool Process::operator<(const Process& other) const {
+	return this->priority < other.priority;
+}
+
+bool Process::operator>(const Process& other) const {
+	return this->priority > other.priority;
+}
+
+bool Process::operator==(const Process& other) const {
+	return this->priority == other.priority;
+}
+
+bool Process::operator!=(const Process& other) const {
+	return !(*this == other);
+}
+
+bool Process::operator<=(const Process& other) const {
+	return !(*this > other);
+}
+
+bool Process::operator>=(const Process& other) const {
+	return !(*this < other);
 }

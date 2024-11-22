@@ -17,6 +17,11 @@ template <typename T>
 BinarySearchTreeNode<T>::BinarySearchTreeNode(T newData) : data(newData), left(nullptr), right(nullptr) {}
 
 template <typename T>
+T BinarySearchTreeNode<T>::getData() {
+	return data;
+}
+
+template <typename T>
 bool BinarySearchTreeNode<T>::operator==(const BinarySearchTreeNode<T>& otherNode) const {
   bool dataEqual = this->data == otherNode.data;
   bool leftEqual = (this->left == nullptr && otherNode.left == nullptr) || (this->left != nullptr && otherNode.left != nullptr && *this->left == *otherNode.left);
@@ -192,6 +197,23 @@ template <typename T>
 void BinarySearchTree<T>::clear() {
   deletePostOrder(root);
   root = nullptr;
+}
+
+template <typename T>
+BinarySearchTreeNode<T>* BinarySearchTree<T>::getRoot() {
+	return root;
+}
+
+template <typename T>
+BinarySearchTreeNode<T>* BinarySearchTree<T>::getMax() {
+	if (!root) {
+		return nullptr;
+	}
+	BinarySearchTreeNode<T>* current = root;
+	while (current->right) {
+		current = current->right;
+	}
+	return current;
 }
 
 template <typename T>

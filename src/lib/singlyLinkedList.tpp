@@ -11,6 +11,11 @@ T SinglyLinkedListNode<T>::getData() {
   return data;
 }
 
+template<typename T>
+SinglyLinkedListNode<T>* SinglyLinkedListNode<T>::getNext() {
+	return next;
+}
+
 template <typename T>
 SinglyLinkedList<T>::SinglyLinkedList() : head (nullptr), size(0) {};
 
@@ -55,7 +60,10 @@ SinglyLinkedList<T>& SinglyLinkedList<T>::operator=(const SinglyLinkedList<T>& o
 
 template <typename T>
 SinglyLinkedList<T>::~SinglyLinkedList() {
-  clear();
+	if (head) {
+	cout << "SLL" << endl;
+  	clear();
+	}
 }
 
 template <typename T>
@@ -366,7 +374,8 @@ void SinglyLinkedList<T>::clear() {
   while (head != nullptr) {
     deleteHead();
   }
-  size = 0;
+  size = 0; 
+	head = nullptr;
 }
 
 template <typename T>

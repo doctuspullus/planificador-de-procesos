@@ -20,9 +20,12 @@ public:
     /// @param newData The new data to be stored in the node's data attribute.
     SinglyLinkedListNode(T newData);
     
-    /// @brief Gets the data within the node;
+    /// @brief Gets the data within the node
     /// @return Node's data.
     T getData();
+		/// @brief Gets the next node
+		/// @return The next node
+		SinglyLinkedListNode* getNext();
 };
 
 /// @brief SinglyLinkedList class: implementation of a singly linked list. Contains a pointer to its head and a counter for the number of nodes.

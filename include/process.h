@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <singlyLinkedList.hxx>
 
@@ -47,18 +49,26 @@ class Process {
   /// @brief Getter de la prioridad del proceso.
   /// @return La prioridad del proceso.
   int getPriority() const;
+	/// @brief 
+	/// @param newPriority 
+	void setPriority(int newPriority);
   /// @brief Getter del estado del proceso.
   /// @return El estado del proceso.
   ProcessState getState() const;
   /// @brief Setter del estado del proceso.
   /// @param newState El nuevo estado al que pasa el proceso.
   void setState(ProcessState newState);
+	int getInstructionIndex();
   /// @brief Getter del quantum restante.
   /// @return El quantum restante.
   float getQuantum();
   /// @brief Setter para el quantum del proceso.
   /// @param quantum El nuevo quantum del proceso.
   void setQuantum(float newQuantum);
+	/// @brief 
+	/// @return 
+	SinglyLinkedList<string>* getInstructions();
+
 
   /// @brief Añade una nueva instruccion al proceso.
   /// @param instruction La nueva instruccion que se va a añadir.
@@ -92,4 +102,11 @@ class Process {
   /// @brief Metodo multiplataforma para pausar el programa durante una cierta cantidad de segundos.
   /// @param seconds Los segundos por los que el programa debe de pausarse.
   void sleepInSeconds(float seconds);
+	
+	bool operator<(const Process& other) const;
+	bool operator>(const Process& other) const;
+	bool operator==(const Process& other) const;
+	bool operator!=(const Process& other) const;
+	bool operator<=(const Process& other) const;
+	bool operator>=(const Process& other) const;
 };

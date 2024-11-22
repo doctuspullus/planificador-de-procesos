@@ -11,3 +11,7 @@ bool Timer::checkTime() {
 	double elapsed = chrono::duration<double>(now - IOStartTime).count();
 	return IORequisite - elapsed <= 0 ? true : false;
 }
+
+timePoint Timer::getStartTime() {
+	return IOStartTime; 
+}
