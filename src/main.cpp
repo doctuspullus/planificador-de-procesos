@@ -17,5 +17,7 @@ int main() {
 	scheduler.addProcess(process2);
 
 	scheduler.run();
+	delete process1;
+	delete process2;
   return 0;
 }

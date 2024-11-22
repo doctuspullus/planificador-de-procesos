@@ -40,6 +40,8 @@ class Process {
   /// @param newName El nombre del nuevo proceso.
   /// @param newPriority La prioridad del nuevo proceso.
   Process(const string newName, int newPriority);
+	Process(const Process& other);
+	Process& operator=(const Process& other);
   /// @brief Destructor de Process.
   ~Process();
   

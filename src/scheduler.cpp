@@ -9,7 +9,6 @@ Scheduler::Scheduler() : currentProcess(nullptr) {
 }
 
 Scheduler::~Scheduler() {
-	cout << "Scheduler" << endl;
 	delete readyQueue;
 	delete blockedQueue;
 	delete finishedProcesses;
@@ -146,9 +145,9 @@ void Scheduler::clearTimer() {
 }
 
 void Scheduler::displayStatus() const {
-	cout << "Ready Queue Size: " << readyQueue->getSize() << endl;
-	cout << "Blocked Queue Size: " << blockedQueue->getSize() << endl;
-	cout << "Finished Processes Size: " << finishedProcesses->getSize() << endl;
+	cout << "Ready Processes: " << readyQueue->getSize() << endl;
+	cout << "Blocked Processes: " << blockedQueue->getSize() << endl;
+	cout << "Finished Processes: " << finishedProcesses->getSize() << endl;
 }
 
 RoundRobin::RoundRobin() : Scheduler(), quantumSlice(5) {
@@ -165,11 +164,10 @@ Process* RoundRobin::selectNextProcess() {
 		return nullptr;
 	}
 
-	Process process = readyQueue->getHead()->getData();
-	readyQueue->deleteByValue(process);
-	process.setQuantum(quantumSlice);
-	Process* p1 = &process;
-	return p1;
+	Process* process = readyQueue->getHead()->getPData();
+	readyQueue->deleteByValue(*process);
+	process->setQuantum(quantumSlice);
+	return process;
 }
 
 Priority::Priority() : Scheduler() {

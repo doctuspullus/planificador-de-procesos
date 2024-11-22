@@ -50,8 +50,25 @@ Process::Process(const string newName, int newPriority)
   state = ProcessState::READY;
 }
 
+Process::Process(const Process& other) : name(other.name), priority(other.priority), instructionIndex(other.instructionIndex), remainingQuantum(other.remainingQuantum), IOPending(other.IOPending), state(other.state) {
+	instructions = new SinglyLinkedList<string>(*other.instructions);
+}
+
+Process& Process::operator=(const Process& other) {
+	if (this != &other) {
+		name = other.name;
+		priority = other.priority;
+		instructionIndex = other.instructionIndex;
+		remainingQuantum = other.remainingQuantum;
+		IOPending = other.IOPending;
+		state = other.state;
+		delete instructions;
+		instructions = new SinglyLinkedList<string>(*other.instructions);
+	}
+	return *this;
+}
+
 Process::~Process() {
-	cout << "Process" << endl;
   delete instructions;
 }
 

@@ -23,6 +23,9 @@ public:
     /// @brief Gets the data within the node
     /// @return Node's data.
     T getData();
+		/// @brief 
+		/// @return 
+		T* getPData();
 		/// @brief Gets the next node
 		/// @return The next node
 		SinglyLinkedListNode* getNext();
