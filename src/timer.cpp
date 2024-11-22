@@ -3,11 +3,11 @@
 Timer::Timer(double newIORequisite) : IORequisite(newIORequisite) {}
 
 void Timer::start() {
-	IOStartTime = clock::now();
+	IOStartTime = steadyClock::now();
 }
 
 bool Timer::checkTime() {
-	timePoint now = clock::now();
+	timePoint now = steadyClock::now();
 	double elapsed = chrono::duration<double>(now - IOStartTime).count();
 	return IORequisite - elapsed <= 0 ? true : false;
 }

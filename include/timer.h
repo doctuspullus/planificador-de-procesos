@@ -4,7 +4,7 @@
 
 using namespace std;
 
-using clock = std::chrono::steady_clock;
+using steadyClock = std::chrono::steady_clock;
 using timePoint = std::chrono::steady_clock::time_point;
 
 /// @brief Clase que sirve de temporizador para verificar si el tiempo necesario para llamar el desbloqueo de un proceso por IO ya pasó.
