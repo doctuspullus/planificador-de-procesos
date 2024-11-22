@@ -5,14 +5,6 @@
 #include <iostream>
 using namespace std;
 
-Process* FileParser::parseProcess(FILE file) {
-
-}
-
-bool FileParser::parseInstructions(FILE* file, Process* process) {
-
-}
-
 FileParser::FileParser() : filename("null"){
   processes = new SinglyLinkedList<string>();
   if (!processes) {
@@ -22,19 +14,24 @@ FileParser::FileParser() : filename("null"){
 
 FileParser::FileParser(const char* inputFile) : filename(inputFile){
   ifstream archivo;
-  archivo.open(filename, ios::in | ios::binary);
-  if (archivo.is_open()) {
-    cerr << "No se pudo abrir el archivo" << endl;
-  } else {
-    
+  processes = new SinglyLinkedList<strings>();
+  if (!processes) {
+    throw runtime_error("Failed to allocate memory for process");
   }
+}
 
-  archivo.close();
-/*
+FileParser::~FileParser() {
+  delete processes;
+}
+
+bool FileParser::parseFile() {
+  bool success = 1;
   ifstream archivo;
   archivo.open(ARCHIVO1, ios::in | ios::binary);
   if (!archivo.is_open()) {
-    cout << "Error al abrir el archivo" << endl;
+    cerr << "Error al abrir el archivo" << endl;
+    success = 0;
+    return success;
   } else {
     string linea;
     char delimitador = ' ';
@@ -43,48 +40,37 @@ FileParser::FileParser(const char* inputFile) : filename(inputFile){
       stringstream stream(linea);
       string instrucciones;
       getline(stream, instrucciones);
-      
-      cout << instrucciones << endl;
       string encontrar1 = "proceso";
       string encontrar2 = "fin proceso";
       int pos1 = instrucciones.find(encontrar1);
       int pos2 = instrucciones.find(encontrar2);
+      Process nuevoProceso;
+      // si llega al final del proceso
       if (pos2 != string::npos) {
         // introducir la última instrucción "fin proceso"
-        // la lista de procesos cambie al siguiente con un null
-        cout << "Entre a fin proceso" << endl;
+        processes->insertHead();
+      // si llega al encabezado
       } else if (pos1 != string::npos) {
         stringstream stream1(linea);
         string proceso, nombrePrograma, numPrioridad;
         getline(stream1, proceso, delimitador);
         getline(stream1, nombrePrograma, delimitador);
         getline(stream1, numPrioridad, delimitador);
-        cout << proceso << endl;
-        cout << nombrePrograma << endl;
-        cout << numPrioridad << endl;
-
-        // crear una nueva lista al proceso
-        cout << "Entre a proceso" << endl;
+        int priority = stoi(numPrioridad);
+        // Pasar nombrePrograma, int numPrioridad
+        nuevoProceso = new Process(nombrePrograma, priority);
+        processes->insertHead(nuevoProceso);
+      // instrucciones del proceso
       } else {
         // introducir instrucción a la lista del proceso correspondiente
-        cout << "Entre a instruccion" << endl;
+        processes->insertTail(instrucciones);
       }
     }
   }
   archivo.close();
-
-  */
+  return success;
 }
 
-FileParser::~FileParser() {
-  delete processes;
-}
-
-bool FileParser::parseFile() {
-  
-}
-
-
-singlyLinkedList* FileParser::getProcesses() {
-
+SinglyLinkedList<Process>* FileParser::getProcesses() {
+  return processes;
 }

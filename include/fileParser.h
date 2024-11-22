@@ -7,10 +7,7 @@
 class FileParser {
   private:
     string filename;
-    singlyLinkedList* processes;
-
-    Process* parseProcess(FILE file);
-    bool parseInstructions(FILE* file, Process* process);
+    SinglyLinkedList<Process>* processes;
 
   public:
     FileParser();
