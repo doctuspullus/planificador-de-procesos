@@ -7,6 +7,9 @@ template <typename T>
 SinglyLinkedListNode<T>::SinglyLinkedListNode(T newData) : data(newData), next(nullptr) {};
 
 template <typename T>
+SinglyLinkedListNode<T>::SinglyLinkedListNode(const SinglyLinkedListNode& other) : data(other.data), next(other.next ? new SinglyLinkedListNode(*other.next) : nullptr) {}
+
+template <typename T>
 T SinglyLinkedListNode<T>::getData() {
   return data;
 }
@@ -258,7 +261,7 @@ void SinglyLinkedList<T>::deleteAt(int position) {
     previous = current;
     current = current->next;
   }
-  if (current = nullptr) {
+  if (current == nullptr) {
     return;
   }
   previous->next = current->next;
@@ -276,15 +279,15 @@ void SinglyLinkedList<T>::deleteByValue(const T& target) {
     return;
   }
   SinglyLinkedListNode<T>* current = head;
-  while (current != nullptr && current->next->data != target) {
+  while (current->next != nullptr && !(current->next->data == target)) {
     current = current->next;
   }
-  if (current == nullptr) {
+  if (current->next == nullptr) {
     return;
   }
   SinglyLinkedListNode<T>* targetNode = current->next;
-  current->next = current->next->next;
-  delete (targetNode);
+  current->next = targetNode->next;
+  delete targetNode;
   size--;
 }
 

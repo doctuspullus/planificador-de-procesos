@@ -22,5 +22,6 @@ class UI {
 	  //input:roundrobin or priority
 	  void askForScheduler();
 	  //output: GUI
-	  static void presentState(Scheduler* localScheduler);
+	  static void presentState(Process* currentProcess);
+		static void clearCLI();
 };

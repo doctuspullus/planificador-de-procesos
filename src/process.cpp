@@ -1,5 +1,6 @@
 #include <string>
 #include <process.h>
+#include <ui.h>
 #ifdef _WINDOWS32
   #include <windows.h>
 #else
@@ -74,6 +75,10 @@ Process::~Process() {
 
 const string Process::getName() const {
   return name;
+}
+
+void Process::setName(const string newName) {
+	name = newName;
 }
 
 int Process::getPriority() const {
@@ -195,25 +200,43 @@ void Process::sleepInSeconds(float seconds) {
 }
 
 bool Process::operator<(const Process& other) const {
+	if (!this || &other == nullptr) {
+		return false;
+	}
 	return this->priority < other.priority;
 }
 
 bool Process::operator>(const Process& other) const {
+	if (!this || &other == nullptr) {
+		return false;
+	}
 	return this->priority > other.priority;
 }
 
 bool Process::operator==(const Process& other) const {
+	if (this == &other) {
+		return true;
+	}
 	return this->priority == other.priority;
 }
 
 bool Process::operator!=(const Process& other) const {
+	if (!this || &other == nullptr) {
+		return false;
+	}
 	return !(*this == other);
 }
 
 bool Process::operator<=(const Process& other) const {
+	if (!this || &other == nullptr) {
+		return false;
+	}
 	return !(*this > other);
 }
 
 bool Process::operator>=(const Process& other) const {
+	if (!this || &other == nullptr) {
+		return false;
+	}
 	return !(*this < other);
 }

@@ -19,6 +19,7 @@ public:
     /// @brief SinglyLinkedListNode parameterized constructor.
     /// @param newData The new data to be stored in the node's data attribute.
     SinglyLinkedListNode(T newData);
+		SinglyLinkedListNode(const SinglyLinkedListNode& other);
     
     /// @brief Gets the data within the node
     /// @return Node's data.

@@ -59,12 +59,23 @@ void UI::askForScheduler() {
 }
 
 //esto va antes de "schedule();" (line81 scheduler.cpp)
-void UI::presentState(Scheduler* localScheduler) {
-	cout << "Proceso: " << localScheduler->getCurrent()->getName()
-		 << ", Prioridad: " << localScheduler->getCurrent()->getPriority() 
-		 << ", Estado: " << localScheduler->getCurrent()->getState()
-		 << ", Quantum Restante: " << localScheduler->getCurrent()->getQuantum() 
+void UI::presentState(Process* currentProcess) {
+	//clearCLI();
+	cout << "Proceso: " << currentProcess->getName()
+		 << ", Prioridad: " << currentProcess->getPriority() 
+		 << ", Estado: " << currentProcess->getState()
+		 << ", Quantum Restante: " << currentProcess->getQuantum() 
 		 << "." << endl;
+	cout << "Instrucción actual: " << currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData() << endl;
+	cout << "Índice de la instrucción: " << currentProcess->getInstructionIndex() << endl;
+}
+
+void UI::clearCLI() {
+#ifdef _WIN32
+	system("cls"); // Windows CLI clear 
+#else
+	system("clear"); // UNIX CLI clear
+#endif
 }
 
 void UI::run() {

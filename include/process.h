@@ -48,6 +48,7 @@ class Process {
   /// @brief Getter del nombre del proceso.
   /// @return El nombre del proceso.
   const string getName() const;
+	void setName(const string newName);
   /// @brief Getter de la prioridad del proceso.
   /// @return La prioridad del proceso.
   int getPriority() const;

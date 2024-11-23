@@ -23,15 +23,12 @@ Scheduler::~Scheduler() {
 }
 
 void Scheduler::run() {
-	UI* ui = new UI();
 	while (hasUnfinishedProcesses()) {
 		checkBlockedProcesses();
 		executeQuantum();
-		ui->presentState(this);
 		schedule();
 		displayStatus();
 	}
-	delete ui;
 }
 
 void Scheduler::addProcess(Process* newProcess) {
@@ -68,6 +65,15 @@ void Scheduler::executeQuantum() {
 		return;
 	}
 
+	while (true) {
+		string currentInstruction = currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData();
+		double quantumCost = (currentInstruction == "e/s") ? 1.5 : 1;
+		if (currentProcess->getQuantum() < quantumCost) {
+			break;
+		}
+		UI::presentState(currentProcess);
+		currentProcess->executeNextInstruction();
+	}
 	switch(currentProcess->getState()) {
 		case ProcessState::FINISHED:
 			moveToFinished(currentProcess);
@@ -160,9 +166,10 @@ void Scheduler::clearTimer() {
 }
 
 void Scheduler::displayStatus() const {
-	cout << "Ready Processes: " << readyQueue->getSize() << endl;
-	cout << "Blocked Processes: " << blockedQueue->getSize() << endl;
-	cout << "Finished Processes: " << finishedProcesses->getSize() << endl;
+	cout << "Procesos listos: " << readyQueue->getSize() << endl;
+	cout << "Procesos bloqueados: " << blockedQueue->getSize() << endl;
+	cout << "Procesos terminados: " << finishedProcesses->getSize() << endl;
+	cout << endl;
 }
 
 Process* Scheduler::getCurrent() {
@@ -201,6 +208,7 @@ void RoundRobin::selectNextProcess() {
 	readyQueue->deleteByValue(process);
 	process.setQuantum(quantumSlice);
 	currentProcess = new Process(process);
+	currentProcess->setQuantum(5);
 }
 
 Priority::Priority() : Scheduler() {
@@ -232,6 +240,7 @@ void Priority::selectNextProcess() {
 	Process process = priorityQueue->getMax()->getData();
 	priorityQueue->remove(process);
 	currentProcess = new Process(process);
+	currentProcess->setQuantum(1024);
 }
 
 void Priority::calculateInitialPriority(Process& process) {

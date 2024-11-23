@@ -8,6 +8,7 @@ int main() {
 	Scheduler* scheduler = ui->getScheduler();
 	string filename = ui->getFilename();
 	FileParser* fileParser = new FileParser(filename);
+	fileParser->parseFile(filename);
 	
 	SinglyLinkedListNode<Process>* current = fileParser->getProcesses()->getHead();
 	while (current) {

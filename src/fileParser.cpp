@@ -26,55 +26,58 @@ FileParser::~FileParser() {
 }
 
 bool FileParser::parseFile(string filename) {
-  bool success = true;
   ifstream archivo;
   archivo.open(filename, ios::in | ios::binary);
 
   if (!archivo.is_open()) {
     cerr << "Error al abrir el archivo" << endl;
-    success = false;
-    return success;
-  } else {
-    string linea;
-    char delimitador = ' ';
-    while (getline(archivo, linea)) {  
-      stringstream stream(linea);
-      string instrucciones;
-      getline(stream, instrucciones);
+    return false;
+  } 
 
-      string encontrar1 = "proceso";
-      string encontrar2 = "fin proceso";
-      size_t pos1 = instrucciones.find(encontrar1);
-      size_t pos2 = instrucciones.find(encontrar2);
-      Process nuevoProceso;
+	string linea;
+	char delimitador = ' ';
+	Process* nuevoProceso = nullptr;
 
-      // si llega al final del proceso
-      if (pos2 != string::npos) {
-        // introduce el proceso a la lista
-        processes->insertHead(nuevoProceso);
-      // si llega al encabezado
-      } else if (pos1 != string::npos) {
-        stringstream stream1(linea);
-        string proceso, nombrePrograma, numPrioridad;
-        getline(stream1, proceso, delimitador);
-        getline(stream1, nombrePrograma, delimitador);
-        getline(stream1, numPrioridad, delimitador);
+	while (getline(archivo, linea)) {  
+		stringstream stream(linea);
+		string instrucciones;
+		getline(stream, instrucciones);
 
-        int priority = stoi(numPrioridad);
-        // Pasar nombrePrograma, int numPrioridad
-				Process* temp = new Process(nombrePrograma, priority);
-        nuevoProceso = *temp;
-				delete temp;
-        processes->insertHead(nuevoProceso);
-      // instrucciones del proceso
-      } else {
-        // introducir instrucción a la lista del proceso correspondiente
-        nuevoProceso.addInstruction(instrucciones);
-      }
-    }
-  }
+		string encontrar1 = "proceso";
+		string encontrar2 = "fin proceso";
+		size_t pos1 = instrucciones.find(encontrar1);
+		size_t pos2 = instrucciones.find(encontrar2);
+
+		// si llega al final del proceso
+		if (pos2 != string::npos) {
+			if (nuevoProceso) {
+				processes->insertHead(*nuevoProceso);
+				delete nuevoProceso;
+				nuevoProceso = nullptr;
+			}
+		// si llega al encabezado
+		} else if (pos1 != string::npos) {
+			stringstream stream1(linea);
+			string proceso, nombrePrograma, numPrioridad;
+			getline(stream1, proceso, delimitador);
+			getline(stream1, nombrePrograma, delimitador);
+			getline(stream1, numPrioridad, delimitador);
+
+			// Pasar nombrePrograma, int numPrioridad
+			int priority = stoi(numPrioridad);
+			nuevoProceso = new Process(nombrePrograma, priority);
+		// instrucciones del proceso
+		} else {
+			// introducir instrucción a la lista del proceso correspondiente
+			nuevoProceso->addInstruction(instrucciones);
+		}
+	}
+	if (nuevoProceso) {
+		delete nuevoProceso;	
+	}
+
   archivo.close();
-  return success;
+  return true;
 }
 
 SinglyLinkedList<Process>* FileParser::getProcesses() {
