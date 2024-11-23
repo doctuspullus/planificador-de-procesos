@@ -13,7 +13,7 @@
 * make run: Compila el código si es necesario lo y ejecuta.
 * make clean: Elimina los archivos binarios necesarios para compilación, entre ellos los ejecutables.
 * make test: Compila y ejecuta las pruebas unitarias.
-Si se utilizará en Windows se requiere de instalar MinGW, aparte de poderse usar en ciertas ocasiones mingw-32make en vez de Make.
+* Si se utilizará en Windows se requiere de instalar MinGW, aparte de poderse usar en ciertas ocasiones mingw-32make en vez de Make.
 
 ## REQUISITOS DEL PROYECTO 
 1. Input: archivo de texto con definiciones de los procesos (nombre, prioridad, instrucciones).
