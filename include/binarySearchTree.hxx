@@ -24,6 +24,10 @@ class BinarySearchTreeNode {
     /// @param newData The new data to be stored in the node's data attribute.
     BinarySearchTreeNode(T newData);
     
+		/// @brief Gets the node's data
+		/// @return The node's data
+		T getData();
+		T* getPData();
     /// @brief Overload of comparison operator == to check if two BST Nodes are the same (their data is the same, and all of their children are equal).
     /// @param otherNode The other node to compare with.
     /// @return True if the nodes are equal; false otherwise.
@@ -90,6 +94,12 @@ class BinarySearchTree {
     void print();
     /// @brief Clears the tree without deleting the instance.
     void clear();
+		
+		/// @brief Gets the root of the tree
+		/// @return The root of the tree
+		BinarySearchTreeNode<T>* getRoot();
+		BinarySearchTreeNode<T>* getMax();
+
 
     /// @brief Overload of comparison operator == to check if two BSTs are the same (their nodes' data and pointers are the same).
     /// @note For this to be called, two trees must be compared, not pointers to two trees.

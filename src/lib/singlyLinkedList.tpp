@@ -7,6 +7,21 @@ template <typename T>
 SinglyLinkedListNode<T>::SinglyLinkedListNode(T newData) : data(newData), next(nullptr) {};
 
 template <typename T>
+T SinglyLinkedListNode<T>::getData() {
+  return data;
+}
+
+template <typename T>
+T* SinglyLinkedListNode<T>::getPData() {
+	return &data;
+}
+
+template<typename T>
+SinglyLinkedListNode<T>* SinglyLinkedListNode<T>::getNext() {
+	return next;
+}
+
+template <typename T>
 SinglyLinkedList<T>::SinglyLinkedList() : head (nullptr), size(0) {};
 
 template <typename T>
@@ -50,7 +65,9 @@ SinglyLinkedList<T>& SinglyLinkedList<T>::operator=(const SinglyLinkedList<T>& o
 
 template <typename T>
 SinglyLinkedList<T>::~SinglyLinkedList() {
-  clear();
+	if (head) {
+  	clear();
+	}
 }
 
 template <typename T>
@@ -170,6 +187,7 @@ void SinglyLinkedList<T>::deleteHead() {
   }
   SinglyLinkedListNode<T>* oldHead = head;
   head = head->next;
+	oldHead->next = nullptr;
   delete oldHead;
   size--;
 }
@@ -271,6 +289,40 @@ void SinglyLinkedList<T>::deleteByValue(const T& target) {
 }
 
 template <typename T>
+SinglyLinkedListNode<T>* SinglyLinkedList<T>::getHead() {
+  return head;
+}
+
+template <typename T>
+SinglyLinkedListNode<T>* SinglyLinkedList<T>::getTail() {
+  SinglyLinkedListNode<T>* current = head;
+  while (current->next) {
+    current = current->next;
+  }
+  return current;
+}
+
+template <typename T>
+SinglyLinkedListNode<T>* SinglyLinkedList<T>::getAt(const int position) {
+  if (position < 1) {
+    return nullptr;
+  }
+  if (!head) {
+    return nullptr;
+  }
+  SinglyLinkedListNode<T>* current = head;
+  for (int i = 1; current && i < position; i++) {
+    current = current->next;
+  }
+  return current;
+}
+
+template <typename T>
+int SinglyLinkedList<T>::getSize() {
+  return size;
+}
+
+template <typename T>
 SinglyLinkedListNode<T>* SinglyLinkedList<T>::search(const T& target) const {
   if (head == nullptr) {
     return nullptr;
@@ -327,7 +379,8 @@ void SinglyLinkedList<T>::clear() {
   while (head != nullptr) {
     deleteHead();
   }
-  size = 0;
+  size = 0; 
+	head = nullptr;
 }
 
 template <typename T>
