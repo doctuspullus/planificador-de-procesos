@@ -6,6 +6,8 @@ LIB = lib
 LIB_SRC = $(SRC)/$(LIB)
 STATIC_DIR = $(LIB)/static
 SHARED_DIR = $(LIB)/shared
+TEST_DIR = unit-tests
+TEST_BIN = $(BIN)/tests
 
 # compiler arguments and flags
 CXX = g++
@@ -29,6 +31,11 @@ LIB_NAME = library
 STATIC_LIB = $(STATIC_DIR)/$(LIB_NAME).a
 SHARED_LIB = $(SHARED_DIR)/$(LIB_NAME)$(SHARED)
 
+# test files
+TEST_SRC = $(TEST_DIR)/tests.cpp
+TEST_OBJ = $(TEST_BIN)/tests.o
+TEST_TARGET = $(TEST_DIR)/tests
+
 # executable target
 TARGET = executable
 
@@ -39,6 +46,7 @@ ifdef ComSpec
 	MKDIR_BIN = if not exist "$(BIN)" mkdir "$(BIN)"
 	MKDIR_STATIC = if not exist "$(STATIC_DIR)" mkdir "$(STATIC_DIR)"
 	MKDIR_SHARED = if not exist "$(SHARED_DIR)" mkdir "$(SHARED_DIR)"
+	MKDIR_TEST_BIN = if not exist "$(TEST_BIN)" mkdir "$(TEST_BIN)"
 	EXE = .exe
 	CLEAR = cls
 	RUN =
@@ -49,6 +57,7 @@ else
 	MKDIR_BIN = mkdir -p $(BIN)
 	MKDIR_STATIC = mkdir -p $(STATIC_DIR)
 	MKDIR_SHARED = mkdir -p $(SHARED_DIR)
+	MKDIR_TEST_BIN = mkdir -p $(TEST_BIN)
 	CXXFLAGS += -fpic
 	EXE =
 	CLEAR = clear
@@ -62,6 +71,7 @@ all: $(TARGET)
 # create necessary directories
 directories:
 	@$(MKDIR_BIN)
+	@$(MKDIR_TEST_BIN)
 	@$(MKDIR_STATIC)
 	@$(MKDIR_SHARED)
 
@@ -101,6 +111,18 @@ $(BIN)/%.o: $(SRC)/%.cpp
 $(BIN)/%.o: $(SRC)/%.c
 	@$(MKDIR_BIN)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+	
+# tests compilation
+$(TEST_OBJ): $(TEST_SRC)
+	@$(MKDIR_TEST_BIN)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(TEST_TARGET): $(TEST_OBJ) $(filter-out $(BIN)/main.o,$(OBJ_FILES))
+	$(CXX) -o $@$(EXE) $^ $(LDFLAGS)
+
+test: $(TEST_TARGET)
+	@$(CLEAR)
+	@$(RUN)$(TEST_TARGET)$(EXE)
 
 # debug target to show detected files
 debug:
@@ -108,17 +130,22 @@ debug:
 	@echo "Template files found: $(TPP_FILES)"
 	@echo "Generated cpp files: $(LIB_CPP_FILES)"
 	@echo "Object files to create: $(LIB_OBJ_FILES)"
+	@echo "Test object files: $(TEST_OBJ)"
 
 # clean
 clean:
 ifdef ComSpec
+	@if exist $(TEST_BIN) $(RM_DIR) $(TEST_BIN)
 	@if exist $(BIN) $(RM_DIR) $(BIN)
 	@if exist $(LIB) $(RM_DIR) $(LIB)
 	@if exist $(TARGET)$(EXE) $(RM) $(TARGET)$(EXE)
+	@if exist $(TEST_TARGET)$(EXE) $(RM) $(TEST_TARGET)$(EXE)
 else
+	$(RM_DIR) $(TEST_BIN)
 	$(RM_DIR) $(BIN)
 	$(RM_DIR) $(LIB)
 	$(RM) $(TARGET)$(EXE)
+	$(RM) $(TEST_TARGET)$(EXE)
 endif
 
 # run
@@ -126,4 +153,4 @@ run: $(TARGET)
 	@$(CLEAR) 
 	@$(RUN)$(TARGET)$(EXE)
 
-.phony: all clean run lib directories debug
+.phony: all clean run lib directories debug test
