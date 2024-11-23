@@ -22,7 +22,6 @@ void evaluate() {
     } else {
       cerr << "Seleccion de tipo fuera de rango, por favor intente de nuevo\n" << endl;
     }
-    
   }
 }
 
