@@ -1,11 +1,13 @@
-# RESUMEN DE INSTRUCCIONES
+# PROYECTO 2: Planificador de Procesos
 
-Crear un Planificador de Procesos que lee definiciones de procesos de un archivo de texto y simula su ejecucion mediante dos algoritmos de planificacion: Round Robin y Planificacion por prioridad. Cada proceso tiene instrucciones que duran cierto tiempo en ejecutarse; entre ellas instruciones 'normales', y operaciones de IO.
+- El objetivo de este proyecto es el de crear un planificador de procesos que lee definiciones de procesos de un archivo de texto y simula su ejecucion mediante dos algoritmos de planificacion: Round Robin y Planificacion por prioridad. Cada proceso tiene instrucciones que duran cierto tiempo en ejecutarse; entre ellas instruciones 'normales', y operaciones de IO.
+
+- Todo esto por medio de la utilización de código basado en la Programación Orientada a Objetos, así como el uso de códigos reutilizables, genéricos, claros y precisos para la ejecución de los algoritmos,
 
 ## PARTICIPANTES
-Jeremy Andrey Rojas Cerna, B96804.
-Ángel Gabriel Garos Dávila, C33186.
-Alexander Wang Wu, C28559.
+- Jeremy Andrey Rojas Cerna, B96804.
+- Ángel Gabriel Garos Dávila, C33186.
+- Alexander Wang Wu, C28559.
 
 ## REQUISITOS DEL PROYECTO 
 1. Input: archivo de texto con definiciones de los procesos (nombre, prioridad, instrucciones).
