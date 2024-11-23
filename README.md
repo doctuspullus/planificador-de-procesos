@@ -3,9 +3,9 @@
 Crear un Planificador de Procesos que lee definiciones de procesos de un archivo de texto y simula su ejecucion mediante dos algoritmos de planificacion: Round Robin y Planificacion por prioridad. Cada proceso tiene instrucciones que duran cierto tiempo en ejecutarse; entre ellas instruciones 'normales', y operaciones de IO.
 
 ## PARTICIPANTES
-Jeremy (carnet)
-Ángel (carnet)
-Alex (carnet)
+Jeremy Andrey Rojas Cerna, B96804.
+Ángel Gabriel Garos Dávila, C33186.
+Alexander Wang Wu, C28559.
 
 ## REQUISITOS DEL PROYECTO 
 1. Input: archivo de texto con definiciones de los procesos (nombre, prioridad, instrucciones).
