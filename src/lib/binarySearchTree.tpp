@@ -22,6 +22,11 @@ T BinarySearchTreeNode<T>::getData() {
 }
 
 template <typename T>
+T* BinarySearchTreeNode<T>::getPData() {
+	return &data;
+}
+
+template <typename T>
 bool BinarySearchTreeNode<T>::operator==(const BinarySearchTreeNode<T>& otherNode) const {
   bool dataEqual = this->data == otherNode.data;
   bool leftEqual = (this->left == nullptr && otherNode.left == nullptr) || (this->left != nullptr && otherNode.left != nullptr && *this->left == *otherNode.left);

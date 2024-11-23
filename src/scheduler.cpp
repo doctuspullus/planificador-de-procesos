@@ -10,9 +10,15 @@ Scheduler::Scheduler() : currentProcess(nullptr) {
 
 Scheduler::~Scheduler() {
 	delete readyQueue;
+	readyQueue = nullptr;
 	delete blockedQueue;
+	blockedQueue = nullptr;
 	delete finishedProcesses;
+	finishedProcesses = nullptr;
+	delete currentProcess;
+	currentProcess = nullptr;
 	delete ioTimer;
+	readyQueue = nullptr;
 }
 
 void Scheduler::run() {
@@ -45,7 +51,7 @@ void Scheduler::removeProcess(Process* process) {
 }
 
 void Scheduler::schedule() {
-	currentProcess = selectNextProcess();
+	selectNextProcess();
 	
 	if (currentProcess) {
 		currentProcess->setState(ProcessState::RUNNING_ACTIVE);
@@ -79,6 +85,7 @@ void Scheduler::preemptCurrentProcess() {
 	if (currentProcess) {
 		currentProcess->setState(ProcessState::RUNNING_PREEMPTED);
 		moveToReady(currentProcess);
+		currentProcess = nullptr;
 	}
 }
 
@@ -110,6 +117,10 @@ void Scheduler::handleProcessStateChange(Process* process, ProcessState newState
 			break;
 		default:
 			break;
+	}
+	
+	if (process == currentProcess) {
+		currentProcess = nullptr;
 	}
 }
 
@@ -156,18 +167,32 @@ RoundRobin::RoundRobin() : Scheduler(), quantumSlice(5) {
 
 RoundRobin::~RoundRobin() {
 	delete preemptedQueue;
-	Scheduler::~Scheduler();
+	preemptedQueue = nullptr;
+	delete readyQueue;
+	readyQueue = nullptr;
+	delete blockedQueue;
+	blockedQueue = nullptr;
+	delete finishedProcesses;
+	finishedProcesses = nullptr;
+	delete currentProcess;
+	currentProcess = nullptr;
+	delete ioTimer;
+	ioTimer = nullptr;
 }
 
-Process* RoundRobin::selectNextProcess() {
+void RoundRobin::selectNextProcess() {
+	if (currentProcess) {
+		delete currentProcess;
+		currentProcess = nullptr;
+	}
 	if (readyQueue->getHead() == nullptr) {
-		return nullptr;
+		return;
 	}
 
-	Process* process = readyQueue->getHead()->getPData();
-	readyQueue->deleteByValue(*process);
-	process->setQuantum(quantumSlice);
-	return process;
+	Process process = readyQueue->getHead()->getData();
+	readyQueue->deleteByValue(process);
+	process.setQuantum(quantumSlice);
+	currentProcess = new Process(process);
 }
 
 Priority::Priority() : Scheduler() {
@@ -176,18 +201,29 @@ Priority::Priority() : Scheduler() {
 
 Priority::~Priority() {
 	delete priorityQueue;
-	Scheduler::~Scheduler();
+	priorityQueue = nullptr;
+	delete readyQueue;
+	readyQueue = nullptr;
+	delete blockedQueue;
+	blockedQueue = nullptr;
+	delete finishedProcesses;
+	finishedProcesses = nullptr;
+	delete currentProcess;
+	currentProcess = nullptr;
+	delete ioTimer;
+	ioTimer = nullptr;
 }
 
-Process* Priority::selectNextProcess() {
+void Priority::selectNextProcess() {
 	if (priorityQueue->getRoot() == nullptr) {
-		return nullptr;
+		delete currentProcess;
+		currentProcess = nullptr;
+		return;
 	}
 
 	Process process = priorityQueue->getMax()->getData();
 	priorityQueue->remove(process);
-	Process* p1 = &process;
-	return p1;
+	currentProcess = new Process(process);
 }
 
 void Priority::calculateInitialPriority(Process& process) {

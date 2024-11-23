@@ -27,6 +27,7 @@ class BinarySearchTreeNode {
 		/// @brief Gets the node's data
 		/// @return The node's data
 		T getData();
+		T* getPData();
     /// @brief Overload of comparison operator == to check if two BST Nodes are the same (their data is the same, and all of their children are equal).
     /// @param otherNode The other node to compare with.
     /// @return True if the nodes are equal; false otherwise.

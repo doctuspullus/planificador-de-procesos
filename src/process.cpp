@@ -31,8 +31,7 @@ ostream& operator<<(ostream& os, const ProcessState& state) {
 }
 
 Process::Process() 
-  : name("null"), priority(0), 
-    instructionIndex(1), remainingQuantum(5), IOPending(false) {
+  : name("null"), priority(0), instructionIndex(1), remainingQuantum(5), IOPending(false) {
   instructions = new SinglyLinkedList<string>();
   if (!instructions) {
     throw runtime_error("Failed to allocate memory for instructions list");
@@ -50,7 +49,8 @@ Process::Process(const string newName, int newPriority)
   state = ProcessState::READY;
 }
 
-Process::Process(const Process& other) : name(other.name), priority(other.priority), instructionIndex(other.instructionIndex), remainingQuantum(other.remainingQuantum), IOPending(other.IOPending), state(other.state) {
+Process::Process(const Process& other) : name(other.name), priority(other.priority), 
+	state(other.state), instructionIndex(other.instructionIndex), remainingQuantum(other.remainingQuantum), IOPending(other.IOPending) {
 	instructions = new SinglyLinkedList<string>(*other.instructions);
 }
 

@@ -14,7 +14,7 @@ class Scheduler {
     Process* currentProcess;            
 		Timer* ioTimer;
 
-    virtual Process* selectNextProcess() = 0;
+    virtual void selectNextProcess() = 0;
     void preemptCurrentProcess();
     void checkBlockedProcesses();
 
@@ -46,7 +46,7 @@ class RoundRobin : public Scheduler {
 		float quantumSlice;
 		
 	protected:
-		Process* selectNextProcess() override;
+		void selectNextProcess() override;
 	
 	public:
 		RoundRobin();
@@ -58,7 +58,7 @@ class Priority : public Scheduler {
 		BinarySearchTree<Process>* priorityQueue;
 
 	protected:
-		Process* selectNextProcess() override;
+		void selectNextProcess() override;
 	
 	public:
 		Priority();
