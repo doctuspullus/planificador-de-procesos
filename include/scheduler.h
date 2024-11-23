@@ -38,6 +38,8 @@ class Scheduler {
     bool hasUnfinishedProcesses() const;
 		void clearTimer();
     void displayStatus() const;
+
+		Process* getCurrent();
 };
 
 class RoundRobin : public Scheduler {

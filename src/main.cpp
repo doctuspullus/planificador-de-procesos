@@ -1,5 +1,24 @@
-#include <iostream>
+#include <ui.h>
+#include <fileParser.h>
+
 int main() {
-	std::cout << "hello world :)" << std::endl;
+	UI* ui = new UI();
+	ui->run();
+
+	Scheduler* scheduler = ui->getScheduler();
+	string filename = ui->getFilename();
+	FileParser* fileParser = new FileParser(filename);
+	
+	SinglyLinkedListNode<Process>* current = fileParser->getProcesses()->getHead();
+	while (current) {
+		Process currentProcess = current->getData();
+		Process* pProcess = &currentProcess;
+		scheduler->addProcess(pProcess); 
+		current = current->getNext();
+	}
+	scheduler->run();
+
+	delete ui;
+	delete fileParser;
   return 0;
 }

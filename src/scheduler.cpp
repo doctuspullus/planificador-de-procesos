@@ -1,4 +1,5 @@
 #include <scheduler.h>
+#include <ui.h>
 #include <iostream>
 
 Scheduler::Scheduler() : currentProcess(nullptr) {
@@ -22,12 +23,15 @@ Scheduler::~Scheduler() {
 }
 
 void Scheduler::run() {
+	UI* ui = new UI();
 	while (hasUnfinishedProcesses()) {
 		checkBlockedProcesses();
 		executeQuantum();
+		ui->presentState(this);
 		schedule();
 		displayStatus();
 	}
+	delete ui;
 }
 
 void Scheduler::addProcess(Process* newProcess) {
@@ -159,6 +163,10 @@ void Scheduler::displayStatus() const {
 	cout << "Ready Processes: " << readyQueue->getSize() << endl;
 	cout << "Blocked Processes: " << blockedQueue->getSize() << endl;
 	cout << "Finished Processes: " << finishedProcesses->getSize() << endl;
+}
+
+Process* Scheduler::getCurrent() {
+	return currentProcess;
 }
 
 RoundRobin::RoundRobin() : Scheduler(), quantumSlice(5) {

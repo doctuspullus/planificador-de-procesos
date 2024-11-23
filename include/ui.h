@@ -1,9 +1,19 @@
 #pragma once
 
 #include <iostream>
+#include <scheduler.h>
 
 class UI {
+	private:
+		string filename;
+		Scheduler* scheduler;
+
 	public: 
+		UI();
+		~UI();
+
+		string getFilename();
+		Scheduler* getScheduler();
 	  //run:
 	  void run();
 	  
@@ -12,6 +22,5 @@ class UI {
 	  //input:roundrobin or priority
 	  void askForScheduler();
 	  //output: GUI
-	  void presentState();
-	
-}
+	  static void presentState(Scheduler* localScheduler);
+};

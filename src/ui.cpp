@@ -1,57 +1,73 @@
-#pragma once
-
 #include <iostream>
 #include <scheduler.h>
 #include <ui.h>
 
-
 using namespace std;
+
+UI::UI() : filename(""), scheduler(nullptr) {}
+
+UI::~UI() {
+	delete scheduler;
+}
+
+string UI::getFilename() {
+	return filename;
+}
+
+Scheduler* UI::getScheduler() {
+	return scheduler;
+}
 
 void UI::askForFileName() {
 	int option;
-	string fileName
 	//cout << "Almacene el archivo a leer en ./database/ y inserte el nombre del archivo a procesar" << endl;
-	cout << "Elija el archivo a utilizar: [1: enrique.txt], [2: jonathan.txt], [3: jose.txt], [4: manfred.txt]" << endl;
-	cin >> option;
-	if (option==1) {
-		fileName = "enrique.txt"
-	} else if (option == 2){
-		fileName = "jonathan.txt"
-	} else if (option == 3){
-		fileName = "jose.txt"
-	} else if (option == 4){
-		fileName = "manfred.txt"
-	} else {
-		cout << "Invalid Option, try again." << endl;
-		askForFileName(); //Lo ultimo del metodo, no debería haber problemas de recursividad
+	while (true) {
+		cout << "Elija el archivo a utilizar: [1: enrique.txt], [2: jonathan.txt], [3: jose.txt], [4: manfred.txt]" << endl;
+		cin >> option;
+		if (option==1) {
+			filename = "database/enrique.txt";
+			break;
+		} else if (option == 2){
+			filename = "database/jonathan.txt";
+			break;
+		} else if (option == 3){
+			filename = "database/jose.txt";
+			break;
+		} else if (option == 4){
+			filename = "database/manfred.txt";
+			break;
+		} else {
+			cout << "Opción inválida, inténtelo de nuevo." << endl;
+		}
 	}
-
+}
 
 void UI::askForScheduler() {
 	int option;
-	cout << "Elija el Scheduler a utilizar: [2: ForPriority], [2: RoundRobin]" << endl;
-	cin >> option;
-	if (option==1) {
-		RoundRobin* scheduler = new RoundRobin();
-	} else if (option == 2){
-		Priority* scheduler = new Priority();
-	} else {
-		cout << "Invalid Option, try again." << endl;
-		askForScheduler(); //Lo ultimo del metodo, no debería haber problemas de recursividad
+	while (true) {
+		cout << "Elija el algoritmo de planificación a utilizar: [1: Round Robin], [2: Planificación por prioridad]" << endl; cin >> option;
+		if (option==1) {
+			scheduler = new RoundRobin();
+			break;
+		} else if (option == 2){
+			scheduler = new Priority();
+			break;
+		} else {
+			cout << "Opción inválida, inténtelo de nuevo." << endl;
+		}
 	}
-
+}
 
 //esto va antes de "schedule();" (line81 scheduler.cpp)
-void UI::presentState() {
-	
-	cout << "Proceso: " << scheduler.getName() 
-		 << ", Prioridad: " << scheduler.getPriority 
-		 << ", Estado: " << scheduler.getState() 
-		 << ", Quantum Restante: " << scheduler.getQuantum 
+void UI::presentState(Scheduler* localScheduler) {
+	cout << "Proceso: " << localScheduler->getCurrent()->getName()
+		 << ", Prioridad: " << localScheduler->getCurrent()->getPriority() 
+		 << ", Estado: " << localScheduler->getCurrent()->getState()
+		 << ", Quantum Restante: " << localScheduler->getCurrent()->getQuantum() 
 		 << "." << endl;
-
+}
 
 void UI::run() {
-	askForFileName()
+	askForFileName();
 	askForScheduler();
 }
