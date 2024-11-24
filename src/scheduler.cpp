@@ -1,4 +1,5 @@
 #include <scheduler.h>
+#include <ui.h>
 
 Scheduler::Scheduler() : currentProcess(nullptr) {
 	readyQueue = new SinglyLinkedList<Process>();
@@ -102,7 +103,7 @@ void Scheduler::preemptCurrentProcess() {
 
 void Scheduler::checkBlockedProcesses() {
 	if (blockedQueue->getHead()) {
-		if (ioTimer->getStartTime().time_since_epoch() == steadyClock::duration::zero()) {
+		if (ioTimer->getStartTime().time_since_epoch() == std::chrono::steady_clock::duration::zero()) {
 			ioTimer->start();
 		}
 		if (ioTimer->checkTime()) {

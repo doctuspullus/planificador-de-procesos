@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <scheduler.h>
-#include <process.h>
 
 /// @brief Clase UI para imprimir el progreso del programa.
 class UI {

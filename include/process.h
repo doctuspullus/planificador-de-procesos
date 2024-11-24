@@ -2,13 +2,12 @@
 
 #include <iostream>
 #include <string>
-#include <singlyLinkedList.hxx>
 #ifdef _WINDOWS32
   #include <windows.h>
 #else
   #include <unistd.h>
 #endif
-#include <ui.h>
+#include <singlyLinkedList.hxx>
 
 /// @brief Enum para cambiar facilmente entre los distintos estados del proceso
 enum class ProcessState {

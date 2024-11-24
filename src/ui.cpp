@@ -26,7 +26,7 @@ Scheduler* UI::getScheduler() {
 void UI::askForFileName() {
 	int option;
 	while (true) {
-		std::cout << "Elija el archivo a utilizar: [1: enrique.txt], [2: jonathan.txt], [3: jose.txt], [4: manfred.txt], [5. pruebas.txt]" << endl;
+		std::cout << "Elija el archivo a utilizar: [1: enrique.txt], [2: jonathan.txt], [3: jose.txt], [4: manfred.txt], [5. pruebas.txt]" << std::endl;
 		std::cin >> option;
 		if (option==1) {
 			filename = "database/enrique.txt";
@@ -44,7 +44,7 @@ void UI::askForFileName() {
 			filename = "database/pruebas.txt";
 			break;
 		} else {
-			std::cout << "Opción inválida, inténtelo de nuevo." << endl;
+			std::cout << "Opción inválida, inténtelo de nuevo." << std::endl;
 		}
 	}
 }
@@ -52,7 +52,7 @@ void UI::askForFileName() {
 void UI::askForScheduler() {
 	int option;
 	while (true) {
-		std::cout << "Elija el algoritmo de planificación a utilizar: [1: Round Robin], [2: Planificación por prioridad]" << endl; std::cin >> option;
+		std::cout << "Elija el algoritmo de planificación a utilizar: [1: Round Robin], [2: Planificación por prioridad]" << std::endl; std::cin >> option;
 		if (option==1) {
 			scheduler = new RoundRobin();
 			break;
@@ -60,7 +60,7 @@ void UI::askForScheduler() {
 			scheduler = new Priority();
 			break;
 		} else {
-			std::cout << "Opción inválida, inténtelo de nuevo." << endl;
+			std::cout << "Opción inválida, inténtelo de nuevo." << std::endl;
 		}
 	}
 }
@@ -74,10 +74,10 @@ void UI::presentState(Process* currentProcess) {
 	if (currentProcess->getQuantum() <= 5) {
 		std::cout << ", Quantum Restante: " << currentProcess->getQuantum() ;
 	}
-	std::cout << "." << endl;
+	std::cout << "." << std::endl;
 	if (currentProcess->getState() != ProcessState::BLOCKED || currentProcess->getState() != ProcessState::RUNNING_PREEMPTED) {
-		std::cout << "Instrucción actual: " << currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData() << endl;
-		std::cout << "Índice de la instrucción: " << currentProcess->getInstructionIndex() << endl;
+		std::cout << "Instrucción actual: " << currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData() << std::endl;
+		std::cout << "Índice de la instrucción: " << currentProcess->getInstructionIndex() << std::endl;
 	}
 }
 

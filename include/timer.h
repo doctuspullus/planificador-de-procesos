@@ -2,9 +2,6 @@
 #include <iostream>
 #include <chrono>
 
-using steadyClock = std::chrono::steady_clock;
-using timePoint = std::chrono::steady_clock::time_point;
-
 /// @brief Clase que sirve de temporizador para verificar si el tiempo necesario para llamar el desbloqueo de un proceso por IO ya pasó.
 /// Contiene: 1. el tiempo en el que se inició el temporizador y 2. el tiempo necesario, en segundos, que debe de haber pasado para llamar el desbloqueo.
 class Timer {
