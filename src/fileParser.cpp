@@ -32,7 +32,7 @@ bool FileParser::parseFile(string filename) {
   archivo.open(filename, ios::in | ios::binary);
 
   if (!archivo.is_open()) {
-    cout << "Error al abrir el archivo" << endl;
+    cerr << "Error al abrir el archivo" << endl;
     return false;
   } 
 
