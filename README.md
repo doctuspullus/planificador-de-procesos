@@ -26,7 +26,7 @@
   - sudo apt install g++
   - sudo apt install gdb
   - sudo apt install make
-5. Reiniciar el sistema después de instalar lo anterior
+5. Reiniciar el sistema después de instalar lo anterior  
 Para abrir WSL, simplemente se ejecuta el comando 'wsl' dentro de cualquier consola de Windows. Si se ejecuta en un fólder que no es la raíz, WSL se abre en ese fólder.
 
 ## REQUISITOS DEL PROYECTO 
