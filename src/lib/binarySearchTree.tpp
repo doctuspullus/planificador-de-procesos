@@ -1,6 +1,4 @@
 #include <binarySearchTree.hxx>
-#include <iostream>
-using namespace std;
 
 template <typename T>
 BinarySearchTreeNode<T>::BinarySearchTreeNode() : data(), left(nullptr), right(nullptr) {}

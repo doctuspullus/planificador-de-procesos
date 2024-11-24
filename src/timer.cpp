@@ -1,6 +1,4 @@
 #include <timer.h>
-#include <iostream>
-#include <chrono>
 
 Timer::Timer(double newIORequisite) : IORequisite(newIORequisite) {}
 

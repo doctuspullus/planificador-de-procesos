@@ -1,10 +1,6 @@
-#include <iostream>
 #include <scheduler.h>
-#include <process.h>
-#include <timer.h>
-#include <singlyLinkedList.hxx>
-#include <binarySearchTree.hxx>
 #include <ui.h>
+#include <iostream>
 
 Scheduler::Scheduler() : currentProcess(nullptr) {
 	readyQueue = new SinglyLinkedList<Process>();

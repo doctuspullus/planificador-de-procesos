@@ -3,12 +3,12 @@
 
 #include <iostream>
 #include <string>
+#include <singlyLinkedList.hxx>
 #ifdef _WINDOWS32
   #include <windows.h>
 #else
   #include <unistd.h>
 #endif
-#include <singlyLinkedList.hxx>
 
 using namespace std;
 
