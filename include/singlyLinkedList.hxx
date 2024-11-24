@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-using namespace std;
 
 /// @brief SinglyLinkedListNode class for use in a singly linked list. Contains some data and a pointer to the next node in the list.
 /// @tparam T Template for use of generic data.

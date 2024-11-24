@@ -1,12 +1,14 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 #include <scheduler.h>
+#include <process.h>
 
 /// @brief Clase UI para imprimir el progreso del programa.
 class UI {
 	private:
-		string filename;
+		std::string filename;
 		Scheduler* scheduler;
 
 	public: 
@@ -17,13 +19,13 @@ class UI {
 		
 		/// @brief Setter para filename
 		/// @param newFilename El nuevo filename
-		void setFilename(const string& newFilename);
+		void setFilename(const std::string& newFilename);
 		/// @brief Setter para scheduler
 		/// @param newScheduler El nuevo scheduler
 		void setScheduler(Scheduler* newScheduler);
 		/// @brief Getter de filename
 		/// @return filename
-		string getFilename();
+		std::string getFilename();
 		/// @brief Getter para scheduler
 		/// @return scheduler
 		Scheduler* getScheduler();

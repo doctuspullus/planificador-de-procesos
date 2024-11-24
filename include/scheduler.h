@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <ui.h>
 #include <singlyLinkedList.hxx>
 #include <binarySearchTree.hxx>
 #include <process.h>

@@ -1,14 +1,14 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 #include <singlyLinkedList.hxx>
 #ifdef _WINDOWS32
   #include <windows.h>
 #else
   #include <unistd.h>
 #endif
-
-using namespace std;
+#include <ui.h>
 
 /// @brief Enum para cambiar facilmente entre los distintos estados del proceso
 enum class ProcessState {
@@ -23,16 +23,16 @@ enum class ProcessState {
 /// @param os El stream de salida al que se envia el ProcessState.
 /// @param state El ProcessState que se envia.
 /// @return El stream de salida.
-ostream& operator<<(ostream& os, const ProcessState& state);
+std::ostream& operator<<(std::ostream& os, const ProcessState& state);
 
 /// @brief Clase que representa un proceso.
 /// Contiene: 1. nombre del proceso, 2. prioridad del proceso, 3. las instrucciones del proceso, 4. el estado del proceso,
 /// 5. el indice de la instruccion en ejecucion, 6. el quantum que le queda al proceso, y 7. una bandera que indica si aun debe terminar una instruccion de E/S
 class Process {
   private:
-    string name;
+    std::string name;
     int priority;                     
-    SinglyLinkedList<string>* instructions;
+    SinglyLinkedList<std::string>* instructions;
     ProcessState state;
     int instructionIndex;
     float remainingQuantum;          
@@ -44,7 +44,7 @@ class Process {
   /// @brief Constructor parametrizado de Process.
   /// @param newName El nombre del nuevo proceso.
   /// @param newPriority La prioridad del nuevo proceso.
-  Process(const string newName, int newPriority);
+  Process(const std::string newName, int newPriority);
 	/// @brief Constructor de movimiento de Process.
 	/// @param other El otro proceso a mover en este
 	Process(const Process& other);
@@ -57,10 +57,10 @@ class Process {
   
   /// @brief Getter del nombre del proceso.
   /// @return El nombre del proceso.
-  const string getName() const;
+  const std::string getName() const;
 	/// @brief Setter para name
 	/// @param newName El nuevo name
-	void setName(const string newName);
+	void setName(const std::string newName);
   /// @brief Getter de la prioridad del proceso.
   /// @return La prioridad del proceso.
   int getPriority() const;
@@ -84,12 +84,12 @@ class Process {
   void setQuantum(float newQuantum);
 	/// @brief 
 	/// @return 
-	SinglyLinkedList<string>* getInstructions() const;
+	SinglyLinkedList<std::string>* getInstructions() const;
 
 
   /// @brief Añade una nueva instruccion al proceso.
   /// @param instruction La nueva instruccion que se va a añadir.
-  void addInstruction(const string instruction);
+  void addInstruction(const std::string instruction);
   /// @brief Simula la ejecucion de la siguiente instruccion en la lista.
   /// @return True si logra ejecutarla; false si el proceso se corta (quantum insuficiente) o se bloquea (E/S).
   bool executeNextInstruction();
@@ -128,5 +128,5 @@ class Process {
 	bool operator!=(const Process& other) const;
 	bool operator<=(const Process& other) const;
 	bool operator>=(const Process& other) const;
-	friend ostream& operator<<(ostream& os, const Process& process);
+	friend std::ostream& operator<<(std::ostream& os, const Process& process);
 };

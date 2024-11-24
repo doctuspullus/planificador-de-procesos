@@ -396,19 +396,19 @@ void SinglyLinkedList<T>::sort() {
 template <typename T>
 void SinglyLinkedList<T>::print() const {
   if (head == nullptr) {
-    cout << "List is empty." << endl;
-    cout << endl;
+    std::cout << "List is empty." << std::endl;
+    std::cout << std::endl;
     return;
   }
-  cout << "List size: " << size << endl;
+  std::cout << "List size: " << size << std::endl;
   SinglyLinkedListNode<T>* current = head;
   int position = 1;
   while (current != nullptr) {
-    cout << "Node " << position << ": " << current->data << endl;
+    std::cout << "Node " << position << ": " << current->data << std::endl;
     current = current->next;
     position++;
   }
-  cout << endl;
+  std::cout << std::endl;
 }
 
 template <typename T>

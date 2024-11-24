@@ -3,15 +3,15 @@
 Timer::Timer(double newIORequisite) : IORequisite(newIORequisite) {}
 
 void Timer::start() {
-	IOStartTime = steadyClock::now();
+	IOStartTime = std::chrono::steady_clock::now();
 }
 
 bool Timer::checkTime() {
-	timePoint now = steadyClock::now();
-	double elapsed = chrono::duration<double>(now - IOStartTime).count();
+	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+	double elapsed = std::chrono::duration<double>(now - IOStartTime).count();
 	return IORequisite - elapsed <= 0 ? true : false;
 }
 
-timePoint Timer::getStartTime() {
+std::chrono::steady_clock::time_point Timer::getStartTime() {
 	return IOStartTime; 
 }

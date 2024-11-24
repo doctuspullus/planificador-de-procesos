@@ -146,13 +146,13 @@ BinarySearchTreeNode<T>* BinarySearchTree<T>::search(const T& target) const {
 
 template <typename T>
 void BinarySearchTree<T>::print() {
-  cout << "Tree's contents: " << endl;
+  std::cout << "Tree's contents: " << std::endl;
   if (!root) {
-    cout << "Tree is empty" << endl;
+    std::cout << "Tree is empty" << std::endl;
     return;
   }
   printInOrder(root);
-  cout << endl;
+  std::cout << std::endl;
 }
 
 template <typename T>
@@ -220,7 +220,7 @@ void BinarySearchTree<T>::printInOrder(const BinarySearchTreeNode<T>* current) {
     return;
   }
   printInOrder(current->left);
-  cout << current->data << " ";
+  std::cout << current->data << " ";
   printInOrder(current->right);
 }
 

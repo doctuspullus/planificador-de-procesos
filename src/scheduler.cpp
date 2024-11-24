@@ -1,6 +1,4 @@
 #include <scheduler.h>
-#include <ui.h>
-#include <iostream>
 
 Scheduler::Scheduler() : currentProcess(nullptr) {
 	readyQueue = new SinglyLinkedList<Process>();
@@ -65,7 +63,7 @@ void Scheduler::executeQuantum() {
 	}
 
 	while (currentProcess->getInstructions()->getSize() >= currentProcess->getInstructionIndex()) {
-		string	currentInstruction = currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData();
+		std::string	currentInstruction = currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData();
 		double quantumCost = (currentInstruction == "e/s") ? 1.5 : 1;
 		if (currentProcess->getState() == ProcessState::BLOCKED) {
 			break;
@@ -198,10 +196,10 @@ bool RoundRobin::hasUnfinishedProcesses() {
 }
 
 void RoundRobin::displayStatus() {
-	cout << "Procesos listos: " << readyQueue->getSize() << endl;
-	cout << "Procesos bloqueados: " << blockedQueue->getSize() << endl;
-	cout << "Procesos terminados: " << finishedProcesses->getSize() << endl;
-	cout << endl;
+	std::cout << "Procesos listos: " << readyQueue->getSize() << std::endl;
+	std::cout << "Procesos bloqueados: " << blockedQueue->getSize() << std::endl;
+	std::cout << "Procesos terminados: " << finishedProcesses->getSize() << std::endl;
+	std::cout << std::endl;
 }
 
 void RoundRobin::selectNextProcess() {
@@ -271,20 +269,20 @@ bool Priority::hasUnfinishedProcesses() {
 }
 
 void Priority::displayStatus() {
-	cout << "Procesos listos: " << priorityQueue->getSize() << endl;
-	cout << "Procesos bloqueados: " << blockedQueue->getSize() << endl;
-	cout << "Procesos terminados: " << finishedProcesses->getSize() << endl;
-	cout << endl;
+	std::cout << "Procesos listos: " << priorityQueue->getSize() << std::endl;
+	std::cout << "Procesos bloqueados: " << blockedQueue->getSize() << std::endl;
+	std::cout << "Procesos terminados: " << finishedProcesses->getSize() << std::endl;
+	std::cout << std::endl;
 }
 
 void Priority::calculateInitialPriority(Process& process) {
 	int priority = 0;
-	SinglyLinkedListNode<string>* current = process.getInstructions()->getHead();
+	SinglyLinkedListNode<std::string>* current = process.getInstructions()->getHead();
 	while (current) {
 		if (current->getData() == "e/s") {
-			priority = max(0, priority - 1);
+			priority = std::max(0, priority - 1);
 		} else {
-			priority = min(10, priority + 1);
+			priority = std::min(10, priority + 1);
 		}
 		current = current->getNext();
 	}
@@ -298,12 +296,12 @@ void Priority::addProcess(Process* newProcess) {
 
 void Priority::adjustProcessPriority(Process& process) {
 	int temp = process.getPriority();
-	SinglyLinkedListNode<string>* current = process.getInstructions()->getAt(process.getInstructionIndex());
+	SinglyLinkedListNode<std::string>* current = process.getInstructions()->getAt(process.getInstructionIndex());
 	while (current) {
 		if (current->getData() == "e/s") {
-			temp = max(0, temp -1);
+			temp = std::max(0, temp -1);
 		} else {
-			temp = min(10, temp +1);
+			temp = std::min(10, temp +1);
 		} 
 		current = current->getNext();
 	}

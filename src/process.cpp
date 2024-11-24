@@ -1,8 +1,6 @@
-#include <string>
 #include <process.h>
-#include <ui.h>
 
-ostream& operator<<(ostream& os, const ProcessState& state) {
+std::ostream& operator<<(std::ostream& os, const ProcessState& state) {
   switch (state) {
     case ProcessState::READY:
       os << "READY";
@@ -28,26 +26,26 @@ ostream& operator<<(ostream& os, const ProcessState& state) {
 
 Process::Process() 
   : name("null"), priority(0), instructionIndex(1), remainingQuantum(5), IOPending(false) {
-  instructions = new SinglyLinkedList<string>();
+  instructions = new SinglyLinkedList<std::string>();
   if (!instructions) {
-    throw runtime_error("Failed to allocate memory for instructions list");
+    throw std::runtime_error("Failed to allocate memory for instructions list");
   }
   state = ProcessState::READY;
 }
 
-Process::Process(const string newName, int newPriority) 
+Process::Process(const std::string newName, int newPriority) 
   : name(newName), priority(newPriority),
     instructionIndex(1), remainingQuantum(5), IOPending(false) {
-  instructions = new SinglyLinkedList<string>();
+  instructions = new SinglyLinkedList<std::string>();
   if (!instructions) {
-    throw runtime_error("Failed to allocate memory for instructions list");
+    throw std::runtime_error("Failed to allocate memory for instructions list");
   }
   state = ProcessState::READY;
 }
 
 Process::Process(const Process& other) : name(other.name), priority(other.priority), 
 	state(other.state), instructionIndex(other.instructionIndex), remainingQuantum(other.remainingQuantum), IOPending(other.IOPending) {
-	instructions = new SinglyLinkedList<string>(*other.instructions);
+	instructions = new SinglyLinkedList<std::string>(*other.instructions);
 }
 
 Process& Process::operator=(const Process& other) {
@@ -59,7 +57,7 @@ Process& Process::operator=(const Process& other) {
 		IOPending = other.IOPending;
 		state = other.state;
 		delete instructions;
-		instructions = new SinglyLinkedList<string>(*other.instructions);
+		instructions = new SinglyLinkedList<std::string>(*other.instructions);
 	}
 	return *this;
 }
@@ -68,11 +66,11 @@ Process::~Process() {
   delete instructions;
 }
 
-const string Process::getName() const {
+const std::string Process::getName() const {
   return name;
 }
 
-void Process::setName(const string newName) {
+void Process::setName(const std::string newName) {
 	name = newName;
 }
 
@@ -104,11 +102,11 @@ void Process::setQuantum(float newQuantum) {
   remainingQuantum = newQuantum;
 }
 
-SinglyLinkedList<string>* Process::getInstructions() const {
+SinglyLinkedList<std::string>* Process::getInstructions() const {
 	return instructions;
 }
 
-void Process::addInstruction(const string instruction) {
+void Process::addInstruction(const std::string instruction) {
   instructions->insertTail(instruction);
 }
 
@@ -121,7 +119,7 @@ bool Process::executeNextInstruction() {
     return false;
   }
   if (this->hasMoreInstrucions()) {
-    SinglyLinkedListNode<string>* node = instructions->getAt(instructionIndex);
+    SinglyLinkedListNode<std::string>* node = instructions->getAt(instructionIndex);
     if (!node) {
       return false;
     }
@@ -224,7 +222,7 @@ bool Process::operator>=(const Process& other) const {
 	return !(*this < other);
 }
 
-ostream& operator<<(ostream& os, const Process& process) {
+std::ostream& operator<<(std::ostream& os, const Process& process) {
 	os << "Process[" 
 			<< "name: " << process.getName() 
 			<< ", priority: " << process.getPriority()
@@ -234,13 +232,13 @@ ostream& operator<<(ostream& os, const Process& process) {
 			<< ", IO pending: " << (process.isInIO() ? "true" : "false")
 			<< ", instructions: {";
 	
-	SinglyLinkedList<string>* instructions = process.getInstructions();
+	SinglyLinkedList<std::string>* instructions = process.getInstructions();
 	if (instructions) {
 		for (int i = 1; i <= instructions->getSize(); i++) {
 			if (i > 1) {
 				os << ", ";
 			}
-			SinglyLinkedListNode<string>* node = instructions->getAt(i);
+			SinglyLinkedListNode<std::string>* node = instructions->getAt(i);
 			if (node) {
 				os << node->getData();
 				}

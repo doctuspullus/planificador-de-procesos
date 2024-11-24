@@ -2,8 +2,6 @@
 #include <iostream>
 #include <chrono>
 
-using namespace std;
-
 using steadyClock = std::chrono::steady_clock;
 using timePoint = std::chrono::steady_clock::time_point;
 
@@ -11,7 +9,7 @@ using timePoint = std::chrono::steady_clock::time_point;
 /// Contiene: 1. el tiempo en el que se inició el temporizador y 2. el tiempo necesario, en segundos, que debe de haber pasado para llamar el desbloqueo.
 class Timer {
 	private:
-		timePoint IOStartTime;
+		std::chrono::steady_clock::time_point IOStartTime;
 		double IORequisite;
 		
 	public:
@@ -27,5 +25,5 @@ class Timer {
 		
 		/// @brief Getter de IOStartTime
 		/// @return IOStartTime
-		timePoint getStartTime();
+		std::chrono::steady_clock::time_point getStartTime();
 };

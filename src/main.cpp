@@ -6,7 +6,7 @@ int main() {
 	ui->run();
 
 	Scheduler* scheduler = ui->getScheduler();
-	string filename = ui->getFilename();
+	std::string filename = ui->getFilename();
 	FileParser* fileParser = new FileParser(filename);
 	fileParser->parseFile(filename);
 	

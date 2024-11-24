@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-using namespace std;
 
 /// @brief BinarySearchTreeNode class for use in a binary search tree. Contains some data, and pointers to its two children nodes.
 /// @tparam T Template for use of generic data. 

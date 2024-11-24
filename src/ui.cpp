@@ -2,22 +2,20 @@
 #include <scheduler.h>
 #include <ui.h>
 
-using namespace std;
-
 UI::UI() : filename(""), scheduler(nullptr) {}
 
 UI::~UI() {
 	delete scheduler;
 }
 
-void UI::setFilename(const string& newFilename) {
+void UI::setFilename(const std::string& newFilename) {
 	filename = newFilename;
 }
 void UI::setScheduler(Scheduler* newScheduler) {
 	scheduler = newScheduler;
 }
 
-string UI::getFilename() {
+std::string UI::getFilename() {
 	return filename;
 }
 
@@ -28,8 +26,8 @@ Scheduler* UI::getScheduler() {
 void UI::askForFileName() {
 	int option;
 	while (true) {
-		cout << "Elija el archivo a utilizar: [1: enrique.txt], [2: jonathan.txt], [3: jose.txt], [4: manfred.txt], [5. pruebas.txt]" << endl;
-		cin >> option;
+		std::cout << "Elija el archivo a utilizar: [1: enrique.txt], [2: jonathan.txt], [3: jose.txt], [4: manfred.txt], [5. pruebas.txt]" << endl;
+		std::cin >> option;
 		if (option==1) {
 			filename = "database/enrique.txt";
 			break;
@@ -46,7 +44,7 @@ void UI::askForFileName() {
 			filename = "database/pruebas.txt";
 			break;
 		} else {
-			cout << "Opción inválida, inténtelo de nuevo." << endl;
+			std::cout << "Opción inválida, inténtelo de nuevo." << endl;
 		}
 	}
 }
@@ -54,7 +52,7 @@ void UI::askForFileName() {
 void UI::askForScheduler() {
 	int option;
 	while (true) {
-		cout << "Elija el algoritmo de planificación a utilizar: [1: Round Robin], [2: Planificación por prioridad]" << endl; cin >> option;
+		std::cout << "Elija el algoritmo de planificación a utilizar: [1: Round Robin], [2: Planificación por prioridad]" << endl; std::cin >> option;
 		if (option==1) {
 			scheduler = new RoundRobin();
 			break;
@@ -62,7 +60,7 @@ void UI::askForScheduler() {
 			scheduler = new Priority();
 			break;
 		} else {
-			cout << "Opción inválida, inténtelo de nuevo." << endl;
+			std::cout << "Opción inválida, inténtelo de nuevo." << endl;
 		}
 	}
 }
@@ -70,16 +68,16 @@ void UI::askForScheduler() {
 //esto va antes de "schedule();" (line81 scheduler.cpp)
 void UI::presentState(Process* currentProcess) {
 	//clearCLI();
-	cout << "Proceso: " << currentProcess->getName()
+	std::cout << "Proceso: " << currentProcess->getName()
 		<< ", Prioridad: " << currentProcess->getPriority() 
 		<< ", Estado: " << currentProcess->getState();
 	if (currentProcess->getQuantum() <= 5) {
-		cout << ", Quantum Restante: " << currentProcess->getQuantum() ;
+		std::cout << ", Quantum Restante: " << currentProcess->getQuantum() ;
 	}
-	cout << "." << endl;
+	std::cout << "." << endl;
 	if (currentProcess->getState() != ProcessState::BLOCKED || currentProcess->getState() != ProcessState::RUNNING_PREEMPTED) {
-		cout << "Instrucción actual: " << currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData() << endl;
-		cout << "Índice de la instrucción: " << currentProcess->getInstructionIndex() << endl;
+		std::cout << "Instrucción actual: " << currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData() << endl;
+		std::cout << "Índice de la instrucción: " << currentProcess->getInstructionIndex() << endl;
 	}
 }
 
