@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 #include <singlyLinkedList.hxx>
 #ifdef _WINDOWS32
   #include <windows.h>

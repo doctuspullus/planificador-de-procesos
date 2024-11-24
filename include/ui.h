@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 #include <scheduler.h>
 
 /// @brief Clase UI para imprimir el progreso del programa.
