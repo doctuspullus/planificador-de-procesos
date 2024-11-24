@@ -1,6 +1,4 @@
-#ifndef TIMER_H
-#define TIMER_H
-
+#pragma once
 #include <iostream>
 #include <chrono>
 
@@ -31,4 +29,3 @@ class Timer {
 		/// @return IOStartTime
 		timePoint getStartTime();
 };
-#endif

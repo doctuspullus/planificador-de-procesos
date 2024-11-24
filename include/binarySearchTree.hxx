@@ -1,6 +1,4 @@
-#ifndef BST_HXX
-#define BST_HXX
-
+#pragma once
 #include <iostream>
 using namespace std;
 
@@ -136,4 +134,3 @@ class BinarySearchTree {
 };
 
 #include <binarySearchTree.tpp>
-#endif

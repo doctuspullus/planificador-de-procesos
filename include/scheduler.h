@@ -1,5 +1,4 @@
-#ifndef SCHEDULER_H
-#define SCHEDULER_H
+#pragma once
 
 #include <process.h>
 #include <timer.h>
@@ -128,4 +127,3 @@ class Priority : public Scheduler {
 		/// @param process El proceso que debe volver a la cola de prioridad
 		void moveToReady(Process* process) override;
 };
-#endif

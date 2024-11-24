@@ -1,6 +1,4 @@
-#ifndef FILE_PARSER_H
-#define FILE_PARSER_H
-
+#pragma once
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -33,4 +31,3 @@ class FileParser {
     /// @return La lista de procesos
     SinglyLinkedList<Process>* getProcesses();
 };
-#endif 
