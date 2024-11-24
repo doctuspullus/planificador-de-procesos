@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SLL_HXX
+#define SLL_HXX
+
 #include <iostream>
 using namespace std;
 
@@ -128,3 +130,4 @@ public:
 };
 
 #include <singlyLinkedList.tpp>
+#endif

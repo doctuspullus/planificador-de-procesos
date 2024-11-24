@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PROCESS_H
+#define PROCESS_H
 
 #include <iostream>
 #include <string>
@@ -131,3 +132,4 @@ class Process {
 	bool operator>=(const Process& other) const;
 	friend ostream& operator<<(ostream& os, const Process& process);
 };
+#endif

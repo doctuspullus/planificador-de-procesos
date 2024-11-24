@@ -1,4 +1,5 @@
 #include <fileParser.h>
+
 using namespace std;
 
 FileParser::FileParser() : filename("null"){

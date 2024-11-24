@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UI_H
+#define UI_H
 
 #include <iostream>
 #include <string>
@@ -42,3 +43,4 @@ class UI {
 		/// @brief Limpia la consola
 		static void clearCLI();
 };
+#endif
