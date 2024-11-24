@@ -1,6 +1,7 @@
 #include <fileParser.h>
 #include <fstream>
 #include <iostream>
+#include <ios>
 #include <sstream>
 #include <string>
 #include <singlyLinkedList.hxx>
