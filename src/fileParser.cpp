@@ -1,4 +1,10 @@
 #include <fileParser.h>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <singlyLinkedList.hxx>
+#include <process.h>
 
 using namespace std;
 

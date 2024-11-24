@@ -1,4 +1,6 @@
 #include <singlyLinkedList.hxx>
+#include <iostream>
+using namespace std;
 
 template <typename T> 
 SinglyLinkedListNode<T>::SinglyLinkedListNode() : data(), next(nullptr) {};

@@ -1,5 +1,11 @@
 #include <ui.h>
 #include <fileParser.h>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <singlyLinkedList.hxx>
+#include <process.h>
 
 int main() {
 	UI* ui = new UI();

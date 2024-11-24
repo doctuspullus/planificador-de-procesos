@@ -1,4 +1,10 @@
 #include <string>
+#ifdef _WINDOWS32
+  #include <windows.h>
+#else
+  #include <unistd.h>
+#endif
+#include <singlyLinkedList.hxx>
 #include <process.h>
 #include <ui.h>
 
