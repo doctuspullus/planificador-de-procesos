@@ -1,9 +1,9 @@
 #pragma once
 
-#include <process.h>
-#include <timer.h>
 #include <singlyLinkedList.hxx>
 #include <binarySearchTree.hxx>
+#include <process.h>
+#include <timer.h>
 
 /// @brief Clase Scheduler para planificar la ejecucion de los proceso, asi como realizar la ejecucion
 class Scheduler {
