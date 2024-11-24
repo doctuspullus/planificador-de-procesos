@@ -13,7 +13,21 @@
 * make run: Compila el código si es necesario lo y ejecuta.
 * make clean: Elimina los archivos binarios necesarios para compilación, entre ellos los ejecutables.
 * make test: Compila y ejecuta las pruebas unitarias.
-* Si se utilizará en Windows se requiere de instalar MinGW, aparte de poderse usar en ciertas ocasiones mingw-32make en vez de Make.
+* Si se utilizara Windows se requiere instalar MinGW, que suele traer mingw32-make como comando, en vez de make.
+* Para evitar problemas de compatibilidad, se recomienda encarecidamente instalar Windows Subsystem for Linux.
+### Pasos de instalación
+1. En una consola de Windows, ejecutar: wsl --install
+2. Reiniciar el sistema
+3. Crear un usuario y una contraseña cuando WSL lo pida
+4. Instalar el software necesario dentro de WSL, en este orden:
+  - sudo apt update
+  - sudo apt upgrade
+  - sudo apt install gcc
+  - sudo apt install g++
+  - sudo apt install gdb
+  - sudo apt install make
+5. Reiniciar el sistema después de instalar lo anterior  
+Para abrir WSL, simplemente se ejecuta el comando 'wsl' dentro de cualquier consola de Windows. Si se ejecuta en un fólder que no es la raíz, WSL se abre en ese fólder.
 
 ## REQUISITOS DEL PROYECTO 
 1. Input: archivo de texto con definiciones de los procesos (nombre, prioridad, instrucciones).
