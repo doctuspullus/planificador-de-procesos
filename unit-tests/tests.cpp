@@ -65,7 +65,7 @@ class Tests {
     int testsRun;
     int testsPassed;
 
-		void printTestResult(bool passed, const string& testName) {
+		void printTestResult(bool passed, const std::string& testName) {
 			testsRun++;
 			if (passed) {
 				testsPassed++;
@@ -76,13 +76,13 @@ class Tests {
 		}
 
 		void printTestSummary() {
-			cout << "\ntest summary:\n";
-			color("cyan", "total tests: " + to_string(testsRun), true);
+			std::cout << "\ntest summary:\n";
+			color("cyan", "total tests: " + std::to_string(testsRun), true);
 			if (testsPassed == testsRun) {
 					color("green", "all tests passed!", true);
 			} else {
-					color("red", "failed tests: " + to_string(testsRun - testsPassed), true);
-					color("green", "passed tests: " + to_string(testsPassed), true);
+					color("red", "failed tests: " + std::to_string(testsRun - testsPassed), true);
+					color("green", "passed tests: " + std::to_string(testsPassed), true);
 			}
 		}
   
@@ -273,11 +273,11 @@ class TimerTests : public Tests {
 			color("yellow", "\nTimer Start Tests:", true);
 
       Timer t1(1.0);
-      timePoint beforeStart = steadyClock::now();
+      std::chrono::time_point beforeStart = std::chrono::steady_clock::now();
       t1.start();
-      timePoint afterStart = steadyClock::now();
+      std::chrono::time_point afterStart = std::chrono::steady_clock::now();
 
-      timePoint timerStartTime = t1.getStartTime();
+      std::chrono::time_point timerStartTime = t1.getStartTime();
       printTestResult(timerStartTime >= beforeStart && timerStartTime <= afterStart, "Timer start time should be between before and after timestamps");
 
 			#ifdef _WINDOWS32
@@ -286,7 +286,7 @@ class TimerTests : public Tests {
 				sleep(2);
 			#endif
       t1.start();
-      timePoint newStartTime = t1.getStartTime();
+      std::chrono::time_point newStartTime = t1.getStartTime();
       printTestResult(newStartTime > timerStartTime, "Timer should update start time on subsequent starts");
 		}
 		
@@ -361,7 +361,7 @@ class UITests : public Tests {
       color("yellow", "\nConstructor Tests:", true);
 
       UI ui;
-      printTestResult(ui.getFilename() == "", "Default filename should be empty string");
+      printTestResult(ui.getFilename() == "", "Default filename should be empty std::string");
       printTestResult(ui.getScheduler() == nullptr, "Default scheduler should be nullptr");
     }
 
@@ -374,7 +374,7 @@ class UITests : public Tests {
       printTestResult(ui.getScheduler() == nullptr, "Initial scheduler should be nullptr");
 
 			// para simular funcionamiento sin el input del usuario 
-      string testFilename = "unit-tests/test.txt";
+      std::string testFilename = "unit-tests/test.txt";
       Scheduler* testScheduler = new RoundRobin();
       
 			ui.setFilename(testFilename);
@@ -391,25 +391,25 @@ class UITests : public Tests {
       testProcess->setQuantum(3.0);
       testProcess->addInstruction("test_instruction");
       
-      stringstream buffer;
-      streambuf* oldCout = cout.rdbuf(buffer.rdbuf());
+      std::stringstream buffer;
+			std::streambuf* oldCout = std::cout.rdbuf(buffer.rdbuf());
 
       UI::presentState(testProcess);
       
-      cout.rdbuf(oldCout);
+			std::cout.rdbuf(oldCout);
 
-      string output = buffer.str();
-      printTestResult(output.find("TestProcess") != string::npos, "presentState should show process name");
-      printTestResult(output.find("Prioridad: 1") != string::npos, "presentState should show priority");
-      printTestResult(output.find("Quantum Restante: 3") != string::npos, "presentState should show remaining quantum when <= 5");
-      printTestResult(output.find("test_instruction") != string::npos, "presentState should show current instruction");
+      std::string output = buffer.str();
+      printTestResult(output.find("TestProcess") != std::string::npos, "presentState should show process name");
+      printTestResult(output.find("Prioridad: 1") != std::string::npos, "presentState should show priority");
+      printTestResult(output.find("Quantum Restante: 3") != std::string::npos, "presentState should show remaining quantum when <= 5");
+      printTestResult(output.find("test_instruction") != std::string::npos, "presentState should show current instruction");
 
       testProcess->setQuantum(6.0);
       buffer.str(""); 
       
       UI::presentState(testProcess);
       output = buffer.str();
-      printTestResult(output.find("Quantum") == string::npos, "presentState should not show quantum when > 5");
+      printTestResult(output.find("Quantum") == std::string::npos, "presentState should not show quantum when > 5");
 
       delete testProcess;
     }
@@ -446,7 +446,7 @@ class FileParserTests : public Tests {
       FileParser fp1;
       printTestResult(fp1.getProcesses() != nullptr, "Default constructor should initialize non-null processes list");
 
-      string testFilename = "testInput.txt";
+      std::string testFilename = "testInput.txt";
       FileParser fp2(testFilename);
       printTestResult(fp2.getProcesses() != nullptr, "Parametrized constructor should initialize non-null processes list");
     }
@@ -455,10 +455,10 @@ class FileParserTests : public Tests {
       color("yellow", "\nParse File Tests:", true);
 
       FileParser fp;
-      string testFilename = "testInput.txt";
+      std::string testFilename = "testInput.txt";
 
       // "archivo" de prueba
-      ofstream outFile(testFilename);
+			std::ofstream outFile(testFilename);
       outFile << "proceso TestProgram 5\n";
       outFile << "instruction1\n";
       outFile << "instruction2\n";

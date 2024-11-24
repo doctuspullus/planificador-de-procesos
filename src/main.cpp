@@ -1,6 +1,5 @@
 #include <ui.h>
 #include <fileParser.h>
-#include <scheduler.h>
 
 int main() {
 	UI* ui = new UI();

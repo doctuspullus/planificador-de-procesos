@@ -277,7 +277,7 @@ void Priority::displayStatus() {
 }
 
 void Priority::calculateInitialPriority(Process& process) {
-	int priority = 0;
+	int priority = process.getPriority();
 	SinglyLinkedListNode<std::string>* current = process.getInstructions()->getHead();
 	while (current) {
 		if (current->getData() == "e/s") {

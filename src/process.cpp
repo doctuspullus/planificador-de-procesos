@@ -124,7 +124,7 @@ bool Process::executeNextInstruction() {
       return false;
     }
     if (node->getData() == "e/s") {
-      if (remainingQuantum > 1.5) {
+      if (remainingQuantum >= 1.5) {
         if (IOPending) {
           finishIO();
           return true;
