@@ -10,6 +10,13 @@ UI::~UI() {
 	delete scheduler;
 }
 
+void UI::setFilename(const string& newFilename) {
+	filename = newFilename;
+}
+void UI::setScheduler(Scheduler* newScheduler) {
+	scheduler = newScheduler;
+}
+
 string UI::getFilename() {
 	return filename;
 }
@@ -20,9 +27,8 @@ Scheduler* UI::getScheduler() {
 
 void UI::askForFileName() {
 	int option;
-	//cout << "Almacene el archivo a leer en ./database/ y inserte el nombre del archivo a procesar" << endl;
 	while (true) {
-		cout << "Elija el archivo a utilizar: [1: enrique.txt], [2: jonathan.txt], [3: jose.txt], [4: manfred.txt]" << endl;
+		cout << "Elija el archivo a utilizar: [1: enrique.txt], [2: jonathan.txt], [3: jose.txt], [4: manfred.txt], [5. pruebas.txt]" << endl;
 		cin >> option;
 		if (option==1) {
 			filename = "database/enrique.txt";
@@ -35,6 +41,9 @@ void UI::askForFileName() {
 			break;
 		} else if (option == 4){
 			filename = "database/manfred.txt";
+			break;
+		} else if (option == 5) {
+			filename = "database/pruebas.txt";
 			break;
 		} else {
 			cout << "Opción inválida, inténtelo de nuevo." << endl;
@@ -62,12 +71,16 @@ void UI::askForScheduler() {
 void UI::presentState(Process* currentProcess) {
 	//clearCLI();
 	cout << "Proceso: " << currentProcess->getName()
-		 << ", Prioridad: " << currentProcess->getPriority() 
-		 << ", Estado: " << currentProcess->getState()
-		 << ", Quantum Restante: " << currentProcess->getQuantum() 
-		 << "." << endl;
-	cout << "Instrucción actual: " << currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData() << endl;
-	cout << "Índice de la instrucción: " << currentProcess->getInstructionIndex() << endl;
+		<< ", Prioridad: " << currentProcess->getPriority() 
+		<< ", Estado: " << currentProcess->getState();
+	if (currentProcess->getQuantum() <= 5) {
+		cout << ", Quantum Restante: " << currentProcess->getQuantum() ;
+	}
+	cout << "." << endl;
+	if (currentProcess->getState() != ProcessState::BLOCKED || currentProcess->getState() != ProcessState::RUNNING_PREEMPTED) {
+		cout << "Instrucción actual: " << currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData() << endl;
+		cout << "Índice de la instrucción: " << currentProcess->getInstructionIndex() << endl;
+	}
 }
 
 void UI::clearCLI() {

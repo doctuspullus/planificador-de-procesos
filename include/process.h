@@ -2,6 +2,11 @@
 
 #include <iostream>
 #include <singlyLinkedList.hxx>
+#ifdef _WINDOWS32
+  #include <windows.h>
+#else
+  #include <unistd.h>
+#endif
 
 using namespace std;
 
@@ -40,7 +45,12 @@ class Process {
   /// @param newName El nombre del nuevo proceso.
   /// @param newPriority La prioridad del nuevo proceso.
   Process(const string newName, int newPriority);
+	/// @brief Constructor de movimiento de Process.
+	/// @param other El otro proceso a mover en este
 	Process(const Process& other);
+	/// @brief Constructor de asignacion movimiento 
+	/// @param other El otro proceso a mover en este
+	/// @return Este proceso con los datos movidos
 	Process& operator=(const Process& other);
   /// @brief Destructor de Process.
   ~Process();
@@ -48,12 +58,14 @@ class Process {
   /// @brief Getter del nombre del proceso.
   /// @return El nombre del proceso.
   const string getName() const;
+	/// @brief Setter para name
+	/// @param newName El nuevo name
 	void setName(const string newName);
   /// @brief Getter de la prioridad del proceso.
   /// @return La prioridad del proceso.
   int getPriority() const;
-	/// @brief 
-	/// @param newPriority 
+	/// @brief Setter para priority
+	/// @param newPriority El nuevo priority
 	void setPriority(int newPriority);
   /// @brief Getter del estado del proceso.
   /// @return El estado del proceso.
@@ -61,16 +73,18 @@ class Process {
   /// @brief Setter del estado del proceso.
   /// @param newState El nuevo estado al que pasa el proceso.
   void setState(ProcessState newState);
-	int getInstructionIndex();
+	/// @brief Getter para instructionIndex
+	/// @return InstructionIndex
+	int getInstructionIndex() const;
   /// @brief Getter del quantum restante.
   /// @return El quantum restante.
-  float getQuantum();
+  float getQuantum() const;
   /// @brief Setter para el quantum del proceso.
   /// @param quantum El nuevo quantum del proceso.
   void setQuantum(float newQuantum);
 	/// @brief 
 	/// @return 
-	SinglyLinkedList<string>* getInstructions();
+	SinglyLinkedList<string>* getInstructions() const;
 
 
   /// @brief Añade una nueva instruccion al proceso.
@@ -106,10 +120,13 @@ class Process {
   /// @param seconds Los segundos por los que el programa debe de pausarse.
   void sleepInSeconds(float seconds);
 	
+	// Sobrecarga de operadores de comparacion para comparar procesos usando su prioridad como criterio
 	bool operator<(const Process& other) const;
 	bool operator>(const Process& other) const;
+	// == en particular usa la prioridad y el nombre del proceso
 	bool operator==(const Process& other) const;
 	bool operator!=(const Process& other) const;
 	bool operator<=(const Process& other) const;
 	bool operator>=(const Process& other) const;
+	friend ostream& operator<<(ostream& os, const Process& process);
 };

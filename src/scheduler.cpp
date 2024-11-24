@@ -61,14 +61,17 @@ void Scheduler::schedule() {
 
 void Scheduler::executeQuantum() {
 	if (!currentProcess) {
-		schedule();
 		return;
 	}
 
-	while (true) {
-		string currentInstruction = currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData();
+	while (currentProcess->getInstructions()->getSize() >= currentProcess->getInstructionIndex()) {
+		string	currentInstruction = currentProcess->getInstructions()->getAt(currentProcess->getInstructionIndex())->getData();
 		double quantumCost = (currentInstruction == "e/s") ? 1.5 : 1;
+		if (currentProcess->getState() == ProcessState::BLOCKED) {
+			break;
+		}
 		if (currentProcess->getQuantum() < quantumCost) {
+			currentProcess->executeNextInstruction();
 			break;
 		}
 		UI::presentState(currentProcess);
@@ -136,6 +139,9 @@ void Scheduler::handleProcessStateChange(Process* process, ProcessState newState
 
 void Scheduler::moveToReady(Process* process) {
 	removeProcess(process);
+	if (process->getState() == ProcessState::BLOCKED) {
+		process->finishIO();
+	}
 	
 	process->setState(ProcessState::READY);
 	readyQueue->insertTail(*process);
@@ -155,26 +161,18 @@ void Scheduler::moveToFinished(Process* process) {
 	finishedProcesses->insertTail(*process);
 }
 
-bool Scheduler::hasUnfinishedProcesses() const {
-	return readyQueue->getHead() != nullptr || blockedQueue->getHead() != nullptr;
-}
-
 void Scheduler::clearTimer() {
 	Timer* old = ioTimer;
 	ioTimer = new Timer(15);
 	delete old;
 }
 
-void Scheduler::displayStatus() const {
-	cout << "Procesos listos: " << readyQueue->getSize() << endl;
-	cout << "Procesos bloqueados: " << blockedQueue->getSize() << endl;
-	cout << "Procesos terminados: " << finishedProcesses->getSize() << endl;
-	cout << endl;
-}
 
 Process* Scheduler::getCurrent() {
 	return currentProcess;
 }
+
+// === ROUND ROBIN ===
 
 RoundRobin::RoundRobin() : Scheduler(), quantumSlice(5) {
 	preemptedQueue = new SinglyLinkedList<Process>();
@@ -195,21 +193,39 @@ RoundRobin::~RoundRobin() {
 	ioTimer = nullptr;
 }
 
+bool RoundRobin::hasUnfinishedProcesses() {
+	return readyQueue->getSize() > 0 || blockedQueue->getSize() > 0;
+}
+
+void RoundRobin::displayStatus() {
+	cout << "Procesos listos: " << readyQueue->getSize() << endl;
+	cout << "Procesos bloqueados: " << blockedQueue->getSize() << endl;
+	cout << "Procesos terminados: " << finishedProcesses->getSize() << endl;
+	cout << endl;
+}
+
 void RoundRobin::selectNextProcess() {
 	if (currentProcess) {
+		readyQueue->deleteByValue(*currentProcess);
 		delete currentProcess;
 		currentProcess = nullptr;
 	}
-	if (readyQueue->getHead() == nullptr) {
+	if (readyQueue->getSize() == 0) {
+		if (blockedQueue->getSize() > 0) {
+			Process blockedTail = blockedQueue->getTail()->getData();
+			currentProcess = new Process(blockedTail);
+			moveToReady(currentProcess);
+			currentProcess->setQuantum(quantumSlice);
+		}
 		return;
 	}
 
 	Process process = readyQueue->getHead()->getData();
-	readyQueue->deleteByValue(process);
-	process.setQuantum(quantumSlice);
 	currentProcess = new Process(process);
-	currentProcess->setQuantum(5);
+	currentProcess->setQuantum(quantumSlice);
 }
+
+// === PLANIFICACION POR PRIORIDAD ===
 
 Priority::Priority() : Scheduler() {
 	priorityQueue = new BinarySearchTree<Process>();
@@ -231,16 +247,34 @@ Priority::~Priority() {
 }
 
 void Priority::selectNextProcess() {
-	if (priorityQueue->getRoot() == nullptr) {
+	if (currentProcess) {
+		priorityQueue->remove(*currentProcess);
 		delete currentProcess;
 		currentProcess = nullptr;
+	}
+	if (priorityQueue->getSize() == 0) {
+		if (blockedQueue->getSize() > 0) {
+			Process blockedTail = blockedQueue->getTail()->getData();
+			currentProcess = new Process(blockedTail);
+			moveToReady(currentProcess);
+		}
 		return;
 	}
 
 	Process process = priorityQueue->getMax()->getData();
-	priorityQueue->remove(process);
 	currentProcess = new Process(process);
 	currentProcess->setQuantum(1024);
+}
+
+bool Priority::hasUnfinishedProcesses() {
+	return priorityQueue->getRoot() != nullptr || blockedQueue->getSize() > 0;
+}
+
+void Priority::displayStatus() {
+	cout << "Procesos listos: " << priorityQueue->getSize() << endl;
+	cout << "Procesos bloqueados: " << blockedQueue->getSize() << endl;
+	cout << "Procesos terminados: " << finishedProcesses->getSize() << endl;
+	cout << endl;
 }
 
 void Priority::calculateInitialPriority(Process& process) {
@@ -257,18 +291,12 @@ void Priority::calculateInitialPriority(Process& process) {
 	process.setPriority(priority);
 }
 
-void Priority::moveToBlocked(Process* process) {
-	Scheduler::moveToBlocked(process);
-}
-
 void Priority::addProcess(Process* newProcess) {
 	calculateInitialPriority(*newProcess);
 	priorityQueue->insert(*newProcess);
 }
 
-void Priority::adjustProcessPriority(Process& process, int newPriority) {
-	priorityQueue->remove(process);
-	
+void Priority::adjustProcessPriority(Process& process) {
 	int temp = process.getPriority();
 	SinglyLinkedListNode<string>* current = process.getInstructions()->getAt(process.getInstructionIndex());
 	while (current) {
@@ -282,4 +310,14 @@ void Priority::adjustProcessPriority(Process& process, int newPriority) {
 	process.setPriority(temp);
 	
 	priorityQueue->insert(process);
+}
+
+void Priority::moveToReady(Process* process) {
+	removeProcess(process);
+	if (process->getState() == ProcessState::BLOCKED) {
+		process->finishIO();
+	}
+	
+	process->setState(ProcessState::READY);
+	adjustProcessPriority(*process);
 }

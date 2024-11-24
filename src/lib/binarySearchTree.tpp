@@ -14,6 +14,26 @@ BinarySearchTreeNode<T>::BinarySearchTreeNode(const BinarySearchTreeNode& other)
 }
 
 template <typename T>
+BinarySearchTreeNode<T>::BinarySearchTreeNode(BinarySearchTreeNode&& other) : data(other.data), left(other.left), right(other.right) {
+	other.left = nullptr;
+	other.right = nullptr;
+}
+
+template <typename T>
+BinarySearchTreeNode<T>& BinarySearchTreeNode<T>::operator=(BinarySearchTreeNode&& other) {
+	if (this != other) {
+		data = other.data;
+		delete left;
+		delete right;
+		left = other.left;
+		right = other.right;
+		other.left = nullptr;
+		other.right = nullptr;
+	}
+	return *this;
+}
+
+template <typename T>
 BinarySearchTreeNode<T>::BinarySearchTreeNode(T newData) : data(newData), left(nullptr), right(nullptr) {}
 
 template <typename T>
@@ -54,6 +74,21 @@ BinarySearchTree<T>& BinarySearchTree<T>::operator=(const BinarySearchTree& othe
     }
   }
   return *this;
+}
+
+template <typename T>
+BinarySearchTree<T>::BinarySearchTree(BinarySearchTree&& other) : root(other.root) {
+	other.root = nullptr;
+}
+
+template <typename T>
+BinarySearchTree<T>& BinarySearchTree<T>::operator=(BinarySearchTree&& other) {
+	if (this != other) {
+		deletePostOrder(root);
+		root = other.root;
+		other.root = nullptr;
+	}
+	return *this;
 }
 
 template <typename T>
@@ -156,7 +191,7 @@ BinarySearchTreeNode<T>* BinarySearchTree<T>::recursiveSearch(const T& target, B
   if (target == current->data) {
     return current;
   } else if (target < current->data) {
-    return recursiveSearch(target, current->left);
+		return recursiveSearch(target, current->left);
   } else {
     return recursiveSearch(target, current->right);
   }
@@ -199,6 +234,14 @@ void BinarySearchTree<T>::deletePostOrder(BinarySearchTreeNode<T>* current) {
 }
 
 template <typename T>
+int BinarySearchTree<T>::getSizeRecursive(BinarySearchTreeNode<T>* current) {
+	if (!current) {
+		return 0;
+	}
+	return 1 + getSizeRecursive(current->left) + getSizeRecursive(current->right);
+}
+
+template <typename T>
 void BinarySearchTree<T>::clear() {
   deletePostOrder(root);
   root = nullptr;
@@ -218,7 +261,20 @@ BinarySearchTreeNode<T>* BinarySearchTree<T>::getMax() {
 	while (current->right) {
 		current = current->right;
 	}
+	if (current->left) {
+		if (current->data == current->left->data) {
+			current = current->left;
+		}
+	}
 	return current;
+}
+
+template<typename T>
+int BinarySearchTree<T>::getSize() {
+	if (!root) {
+		return 0;
+	}
+	return 1 + getSizeRecursive(root->left) + getSizeRecursive(root->right);
 }
 
 template <typename T>

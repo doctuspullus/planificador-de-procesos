@@ -1,9 +1,4 @@
 #include <fileParser.h>
-#include <process.h>
-#include <singlyLinkedList.hxx>
-#include <fstream>
-#include <iostream>
-#include <sstream>
 using namespace std;
 
 FileParser::FileParser() : filename("null"){

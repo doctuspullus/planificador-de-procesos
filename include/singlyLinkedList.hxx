@@ -19,7 +19,16 @@ public:
     /// @brief SinglyLinkedListNode parameterized constructor.
     /// @param newData The new data to be stored in the node's data attribute.
     SinglyLinkedListNode(T newData);
+		/// @brief SinglyLinkedListNode copy constructor.
+		/// @param other The other SLLNode to copy.
 		SinglyLinkedListNode(const SinglyLinkedListNode& other);
+		/// @brief SinglyLinkedListNode move constructor.
+		/// @param other The other SLLNode to move to this one.
+		SinglyLinkedListNode(SinglyLinkedListNode&& other);
+		/// @brief SinglyLinkedListNode move assignment constructor.
+		/// @param other The other SLLNode to move to this one.
+		/// @return This SLLNode with the moved data.
+		SinglyLinkedListNode& operator=(SinglyLinkedListNode&& other);
     
     /// @brief Gets the data within the node
     /// @return Node's data.
@@ -53,6 +62,13 @@ public:
     /// @param other 
     /// @return 
     SinglyLinkedList<T>& operator=(const SinglyLinkedList<T>& other);
+		/// @brief SinglyLinkedList move constructor.
+		/// @param other The other SLL to move to this one.
+		SinglyLinkedList(SinglyLinkedList&& other);
+		/// @brief SinglyLinkedList move assignment constructor.
+		/// @param other The other SLL to move to this one.
+		/// @return This list with the new data.
+		SinglyLinkedList&& operator=(SinglyLinkedList&& other);
     /// @brief SinglyLinkedList destructor.
     ~SinglyLinkedList();
 

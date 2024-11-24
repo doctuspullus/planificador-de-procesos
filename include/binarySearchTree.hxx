@@ -18,8 +18,15 @@ class BinarySearchTreeNode {
     /// @brief BinarySearchTreeNode constructor.
     BinarySearchTreeNode();
     /// @brief BinarySearchTreeNode copy constructor.
-    /// @param other 
+    /// @param other The other BSTNode to copy.
     BinarySearchTreeNode(const BinarySearchTreeNode& other);
+		/// @brief BinarySearchTreeNode move constructor.
+		/// @param other The other BSTNode to move here.
+		BinarySearchTreeNode(BinarySearchTreeNode&& other);
+		/// @brief BinarySearchTreeNode move assignment constructor.
+		/// @param other The other BSTNode to move here.
+		/// @return This tree with the moved data.
+		BinarySearchTreeNode& operator=(BinarySearchTreeNode&& other);
     /// @brief BinarySearchTreeNode parameterized constructor.
     /// @param newData The new data to be stored in the node's data attribute.
     BinarySearchTreeNode(T newData);
@@ -27,6 +34,8 @@ class BinarySearchTreeNode {
 		/// @brief Gets the node's data
 		/// @return The node's data
 		T getData();
+		/// @brief Gets a pointer to the node's data.
+		/// @return A pointer to the node's data.
 		T* getPData();
     /// @brief Overload of comparison operator == to check if two BST Nodes are the same (their data is the same, and all of their children are equal).
     /// @param otherNode The other node to compare with.
@@ -64,17 +73,28 @@ class BinarySearchTree {
     /// @brief A helper method to delete all the nodes in the tree in post order.
     /// @param current The root of the current tree or sub-tree.
     void deletePostOrder(BinarySearchTreeNode<T>* current);
+		/// @brief A helper method to find the size of the tree (number of nodes).
+		/// @param current The root of the current tree or sub-tree.
+		/// @return The size of the tree.
+		int getSizeRecursive(BinarySearchTreeNode<T>* current);
     
   public:
     /// @brief BinarySearchTree constructor.
     BinarySearchTree();
     /// @brief BinarySearchTree copy constructor.
-    /// @param other 
+    /// @param other The other BST to copy.
     BinarySearchTree(const BinarySearchTree& other);
     /// @brief BinarySearchTree assignment operator.
-    /// @param other 
-    /// @return 
+    /// @param other The other BST to copy.
+    /// @return This tree with the copied data.
     BinarySearchTree& operator=(const BinarySearchTree& other);
+		/// @brief BinarySearchTree move operator.
+		/// @param other The other BST to move.
+		BinarySearchTree(BinarySearchTree&& other);
+		/// @brief BinarySearchTree move assignment operator.
+		/// @param other The other BST to move.
+		/// @return This tree with the moved data.
+		BinarySearchTree& operator=(BinarySearchTree&& other);
     /// @brief BinarySearchTree destructor.
     ~BinarySearchTree();
 
@@ -98,7 +118,12 @@ class BinarySearchTree {
 		/// @brief Gets the root of the tree
 		/// @return The root of the tree
 		BinarySearchTreeNode<T>* getRoot();
+		/// @brief Gets the biggest node in the tree.
+		/// @return A pointer to the biggest node in the tree.
 		BinarySearchTreeNode<T>* getMax();
+		/// @brief Gets the size of the tree (number of nodes).
+		/// @return The size of the tree.
+		int getSize();
 
 
     /// @brief Overload of comparison operator == to check if two BSTs are the same (their nodes' data and pointers are the same).

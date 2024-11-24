@@ -1,11 +1,6 @@
 #include <string>
 #include <process.h>
 #include <ui.h>
-#ifdef _WINDOWS32
-  #include <windows.h>
-#else
-  #include <unistd.h>
-#endif
 
 ostream& operator<<(ostream& os, const ProcessState& state) {
   switch (state) {
@@ -97,11 +92,11 @@ void Process::setState(ProcessState newState) {
   state = newState;
 }
 
-int Process::getInstructionIndex() {
+int Process::getInstructionIndex() const {
 	return instructionIndex;
 }
 
-float Process::getQuantum() {
+float Process::getQuantum() const {
   return remainingQuantum;
 }
 
@@ -109,7 +104,7 @@ void Process::setQuantum(float newQuantum) {
   remainingQuantum = newQuantum;
 }
 
-SinglyLinkedList<string>* Process::getInstructions() {
+SinglyLinkedList<string>* Process::getInstructions() const {
 	return instructions;
 }
 
@@ -200,16 +195,13 @@ void Process::sleepInSeconds(float seconds) {
 }
 
 bool Process::operator<(const Process& other) const {
-	if (!this || &other == nullptr) {
-		return false;
+	if (this->priority == other.priority) {
+		return true;
 	}
 	return this->priority < other.priority;
 }
 
 bool Process::operator>(const Process& other) const {
-	if (!this || &other == nullptr) {
-		return false;
-	}
 	return this->priority > other.priority;
 }
 
@@ -217,26 +209,44 @@ bool Process::operator==(const Process& other) const {
 	if (this == &other) {
 		return true;
 	}
-	return this->priority == other.priority;
+	return this->priority == other.priority && this->name == other.name;
 }
 
 bool Process::operator!=(const Process& other) const {
-	if (!this || &other == nullptr) {
-		return false;
-	}
 	return !(*this == other);
 }
 
 bool Process::operator<=(const Process& other) const {
-	if (!this || &other == nullptr) {
-		return false;
-	}
 	return !(*this > other);
 }
 
 bool Process::operator>=(const Process& other) const {
-	if (!this || &other == nullptr) {
-		return false;
-	}
 	return !(*this < other);
+}
+
+ostream& operator<<(ostream& os, const Process& process) {
+	os << "Process[" 
+			<< "name: " << process.getName() 
+			<< ", priority: " << process.getPriority()
+			<< ", state: " << process.getState()
+			<< ", instruction index: " << process.getInstructionIndex()
+			<< ", quantum: " << process.getQuantum()
+			<< ", IO pending: " << (process.isInIO() ? "true" : "false")
+			<< ", instructions: {";
+	
+	SinglyLinkedList<string>* instructions = process.getInstructions();
+	if (instructions) {
+		for (int i = 1; i <= instructions->getSize(); i++) {
+			if (i > 1) {
+				os << ", ";
+			}
+			SinglyLinkedListNode<string>* node = instructions->getAt(i);
+			if (node) {
+				os << node->getData();
+				}
+		}
+	}
+	os << "}]";
+	
+	return os;
 }

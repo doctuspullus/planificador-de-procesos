@@ -25,5 +25,7 @@ class Timer {
 		/// @return true si ha pasado el tiempo necesario o más para desbloquear; false si no.
 		bool checkTime();
 		
+		/// @brief Getter de IOStartTime
+		/// @return IOStartTime
 		timePoint getStartTime();
 };

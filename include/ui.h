@@ -3,25 +3,41 @@
 #include <iostream>
 #include <scheduler.h>
 
+/// @brief Clase UI para imprimir el progreso del programa.
 class UI {
 	private:
 		string filename;
 		Scheduler* scheduler;
 
 	public: 
+		/// @brief Constructor predeterminado
 		UI();
+		/// @brief Destructor
 		~UI();
-
+		
+		/// @brief Setter para filename
+		/// @param newFilename El nuevo filename
+		void setFilename(const string& newFilename);
+		/// @brief Setter para scheduler
+		/// @param newScheduler El nuevo scheduler
+		void setScheduler(Scheduler* newScheduler);
+		/// @brief Getter de filename
+		/// @return filename
 		string getFilename();
+		/// @brief Getter para scheduler
+		/// @return scheduler
 		Scheduler* getScheduler();
-	  //run:
+
+	  /// @brief Ejecuta los procesos de input
 	  void run();
 	  
-	  //input: nombrefile
+	  /// @brief Le pide al usuario que escoja uno de los archivos
 	  void askForFileName();
-	  //input:roundrobin or priority
+	  /// @brief Le pide al usuario que escoja uno de los algoritmos de planificacion
 	  void askForScheduler();
-	  //output: GUI
+	  /// @brief Muestra el estado del programa en la ejecucion de un proceso actual
+	  /// @param currentProcess El proceso que se esta "ejecutando" actualmente
 	  static void presentState(Process* currentProcess);
+		/// @brief Limpia la consola
 		static void clearCLI();
 };

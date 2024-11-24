@@ -67,6 +67,40 @@ SinglyLinkedList<T>& SinglyLinkedList<T>::operator=(const SinglyLinkedList<T>& o
 }
 
 template <typename T>
+SinglyLinkedListNode<T>::SinglyLinkedListNode(SinglyLinkedListNode&& other) : data(other.data), next(other.next) {
+	other.next = nullptr;
+}
+
+template <typename T>
+SinglyLinkedListNode<T>& SinglyLinkedListNode<T>::operator=(SinglyLinkedListNode&& other) {
+	if (this != other) {
+		data = other.data;
+		delete next;
+		next = other.next;
+		other.next = nullptr;
+	}
+	return *this;
+}
+
+template <typename T>
+SinglyLinkedList<T>::SinglyLinkedList(SinglyLinkedList&& other) : head(other.head), size(other.size) {
+	other.head = nullptr;
+	other.size = 0;
+}
+
+template <typename T>
+SinglyLinkedList<T>&& SinglyLinkedList<T>::operator=(SinglyLinkedList&& other) {
+	if (this != other) {
+		clear();
+		head = other.head;
+		size = other.size;
+		other.head = nullptr;
+		other.size = 0;
+	}
+	return *this;
+}
+
+template <typename T>
 SinglyLinkedList<T>::~SinglyLinkedList() {
 	if (head) {
   	clear();

@@ -1,5 +1,10 @@
 #include <iostream>
 #include <process.h>
+#include <timer.h>
+#include <ui.h>
+#include <scheduler.h>
+#include <fileParser.h>
+#include <sstream>
 
 // Color Terminal Output Library
 // MIT Licensed Library
@@ -244,14 +249,371 @@ class ProcessTests : public Tests {
 		}
 };
 
+class TimerTests : public Tests {
+	public:
+		void runAllTests() override {
+			color("cyan", "\n=== Timer Class Tests ===", true);
+
+			testConstructor();
+			testTimerStart();
+			testTimeChecking();
+
+			printTestSummary();
+		}
+
+		void testConstructor() {
+			color("yellow", "\nConstructor Tests:", true);
+
+			Timer t1(1.5);
+			
+			printTestResult(true, "Timer constructor executed without errors.");
+		}
+		
+		void testTimerStart() {
+			color("yellow", "\nTimer Start Tests:", true);
+
+      Timer t1(1.0);
+      timePoint beforeStart = steadyClock::now();
+      t1.start();
+      timePoint afterStart = steadyClock::now();
+
+      timePoint timerStartTime = t1.getStartTime();
+      printTestResult(timerStartTime >= beforeStart && timerStartTime <= afterStart, "Timer start time should be between before and after timestamps");
+
+			#ifdef _WINDOWS32
+				Sleep(2 * 1000);
+			#else
+				sleep(2);
+			#endif
+      t1.start();
+      timePoint newStartTime = t1.getStartTime();
+      printTestResult(newStartTime > timerStartTime, "Timer should update start time on subsequent starts");
+		}
+		
+		void testTimeChecking() {
+			color("yellow", "\nTime Checking Tests:", true);
+
+			// checkeo inmediato
+      Timer t1(1);
+      t1.start();
+      printTestResult(t1.checkTime() == false, "Timer should not complete immediately");
+
+      // chequeo despues de esperar
+      Timer t2(1);
+      t2.start();
+			#ifdef _WINDOWS32
+				Sleep(1.1 * 1000);
+			#else
+				sleep(1.1);
+			#endif
+      printTestResult(t2.checkTime() == true, "Timer should complete after waiting longer than requisite time");
+
+      // chequeo despues de completacion parcial
+      Timer t3(2); 
+      t3.start();
+			#ifdef _WINDOWS32
+				Sleep(1 * 1000);
+			#else
+				sleep(1);
+			#endif
+      printTestResult(t3.checkTime() == false, "Timer should not complete before requisite time");
+			#ifdef _WINDOWS32
+				Sleep(2 1000);
+			#else
+				sleep(2);
+			#endif
+      printTestResult(t3.checkTime() == true, "Timer should complete after full requisite time");
+
+      // reset
+      Timer t5(2);
+      t5.start();
+			#ifdef _WINDOWS32
+				Sleep(1 * 1000);
+			#else
+				sleep(1);
+			#endif
+      bool firstCheck = t5.checkTime();  // deberia ser false
+      t5.start();  // reset del tiemr
+			#ifdef _WINDOWS32
+				Sleep(1 * 1000);
+			#else
+				sleep(1);
+			#endif
+      bool secondCheck = t5.checkTime();  // deberia ser false
+      printTestResult(firstCheck == false && secondCheck == false,"Timer should reset correctly when started again");
+    }
+};
+
+class UITests : public Tests {
+	public:
+		void runAllTests() override {
+			color("cyan", "\n=== UI Class Tests ===\n", true);
+
+      testConstructor();
+      testGettersAndSetters();
+      testStaticMethods();
+      testDestructor();
+
+      printTestSummary();
+		}
+
+		void testConstructor() {
+      color("yellow", "\nConstructor Tests:", true);
+
+      UI ui;
+      printTestResult(ui.getFilename() == "", "Default filename should be empty string");
+      printTestResult(ui.getScheduler() == nullptr, "Default scheduler should be nullptr");
+    }
+
+    void testGettersAndSetters() {
+      color("yellow", "\nGetter Tests:", true);
+
+      UI ui;
+      
+      printTestResult(ui.getFilename() == "", "Initial filename should be empty");
+      printTestResult(ui.getScheduler() == nullptr, "Initial scheduler should be nullptr");
+
+			// para simular funcionamiento sin el input del usuario 
+      string testFilename = "unit-tests/test.txt";
+      Scheduler* testScheduler = new RoundRobin();
+      
+			ui.setFilename(testFilename);
+			ui.setScheduler(testScheduler);
+
+      printTestResult(ui.getFilename() == testFilename, "Should retrieve correct filename after setting");
+      printTestResult(ui.getScheduler() == testScheduler, "Should retrieve correct scheduler after setting");
+    }
+
+    void testStaticMethods() {
+      color("yellow", "\nStatic Method Tests:", true);
+
+      Process* testProcess = new Process("TestProcess", 1);
+      testProcess->setQuantum(3.0);
+      testProcess->addInstruction("test_instruction");
+      
+      stringstream buffer;
+      streambuf* oldCout = cout.rdbuf(buffer.rdbuf());
+
+      UI::presentState(testProcess);
+      
+      cout.rdbuf(oldCout);
+
+      string output = buffer.str();
+      printTestResult(output.find("TestProcess") != string::npos, "presentState should show process name");
+      printTestResult(output.find("Prioridad: 1") != string::npos, "presentState should show priority");
+      printTestResult(output.find("Quantum Restante: 3") != string::npos, "presentState should show remaining quantum when <= 5");
+      printTestResult(output.find("test_instruction") != string::npos, "presentState should show current instruction");
+
+      testProcess->setQuantum(6.0);
+      buffer.str(""); 
+      
+      UI::presentState(testProcess);
+      output = buffer.str();
+      printTestResult(output.find("Quantum") == string::npos, "presentState should not show quantum when > 5");
+
+      delete testProcess;
+    }
+
+    void testDestructor() {
+      color("yellow", "\nDestructor Tests:", true);
+
+      // Test proper cleanup of scheduler
+      UI* ui = new UI();
+      Scheduler* testScheduler = new RoundRobin();
+			ui->setScheduler(testScheduler);
+
+      delete ui;
+      printTestResult(true, "Destructor executed without errors");
+    }
+};
+
+class FileParserTests : public Tests {
+  public:
+    void runAllTests() override {
+      color("cyan", "\n=== FileParser Class Tests ===", true);
+
+      testConstructor();
+      testParseFile();
+      testGetProcesses();
+      testDestructor();
+
+      printTestSummary();
+    }
+
+    void testConstructor() {
+      color("yellow", "\nConstructor Tests:", true);
+
+      FileParser fp1;
+      printTestResult(fp1.getProcesses() != nullptr, "Default constructor should initialize non-null processes list");
+
+      string testFilename = "testInput.txt";
+      FileParser fp2(testFilename);
+      printTestResult(fp2.getProcesses() != nullptr, "Parametrized constructor should initialize non-null processes list");
+    }
+
+    void testParseFile() {
+      color("yellow", "\nParse File Tests:", true);
+
+      FileParser fp;
+      string testFilename = "testInput.txt";
+
+      // "archivo" de prueba
+      ofstream outFile(testFilename);
+      outFile << "proceso TestProgram 5\n";
+      outFile << "instruction1\n";
+      outFile << "instruction2\n";
+      outFile << "fin proceso\n";
+      outFile.close();
+
+      bool parseResult = fp.parseFile(testFilename);
+      printTestResult(parseResult, "parseFile should return true for valid file");
+
+      auto processes = fp.getProcesses();
+      printTestResult(processes->getSize() == 1, "Processes list should contain 1 process");
+
+      auto process = processes->getHead()->getData();
+      printTestResult(process.getName() == "TestProgram", "Process name should be parsed correctly");
+      printTestResult(process.getPriority() == 5, "Process priority should be parsed correctly");
+      printTestResult(process.hasMoreInstrucions(), "Process should have instructions");
+      printTestResult(process.executeNextInstruction() == true, "First instruction should execute correctly");
+      printTestResult(process.executeNextInstruction() == true, "Second instruction should execute correctly");
+      printTestResult(process.executeNextInstruction() == false, "No more instructions should be left to execute");
+
+      remove(testFilename.c_str());
+    }
+
+    void testGetProcesses() {
+      color("yellow", "\nGet Processes Tests:", true);
+
+      FileParser fp;
+      auto processes = fp.getProcesses();
+
+      printTestResult(processes != nullptr, "getProcesses should return a valid pointer");
+      printTestResult(processes->getSize() == 0, "Processes list should initially be empty");
+    }
+
+    void testDestructor() {
+      color("yellow", "\nDestructor Tests:", true);
+
+      FileParser* fp = new FileParser();
+      delete fp;
+
+      printTestResult(true, "Destructor executed without errors (memory checked with Valgrind)");
+    }
+};
+
+class SchedulerTests : public Tests {
+  public:
+    void runAllTests() override {
+      color("cyan", "\n=== Scheduler Class Tests ===", true);
+
+      testConstructor();
+      testAddAndRemoveProcesses();
+      testStateTransitions();
+      testExecutionCycle();
+      testDestructor();
+
+      printTestSummary();
+    }
+
+    void testConstructor() {
+      color("yellow", "\nConstructor Tests:", true);
+
+      RoundRobin rrScheduler;
+      printTestResult(rrScheduler.getCurrent() == nullptr, "Current process should be null initially");
+      printTestResult(rrScheduler.hasUnfinishedProcesses() == false, "No unfinished processes initially");
+    }
+
+    void testAddAndRemoveProcesses() {
+      color("yellow", "\nAdd and Remove Processes Tests:", true);
+
+      RoundRobin rrScheduler;
+
+      Process* p1 = new Process("Process1", 1);
+      Process* p2 = new Process("Process2", 2);
+      rrScheduler.addProcess(p1);
+      rrScheduler.addProcess(p2);
+
+      printTestResult(rrScheduler.hasUnfinishedProcesses() == true, "Scheduler should detect unfinished processes after adding");
+      printTestResult(rrScheduler.getCurrent() == nullptr, "Current process should remain null before scheduling");
+
+      rrScheduler.removeProcess(p1);
+      printTestResult(rrScheduler.hasUnfinishedProcesses() == true, "Scheduler should still detect unfinished processes after removing one");
+      delete p1;
+      delete p2;
+    }
+
+    void testStateTransitions() {
+      color("yellow", "\nState Transitions Tests:", true);
+
+      RoundRobin rrScheduler;
+      Process* p = new Process("Process1", 1);
+      rrScheduler.addProcess(p);
+
+      rrScheduler.schedule();
+      Process* current = rrScheduler.getCurrent();
+      printTestResult(current != nullptr, "Scheduler should select a current process");
+      printTestResult(current->getState() == ProcessState::RUNNING_ACTIVE, "Current process should be in RUNNING_ACTIVE state");
+
+      rrScheduler.handleProcessStateChange(current, ProcessState::BLOCKED);
+      printTestResult(current->getState() == ProcessState::BLOCKED, "Process should transition to BLOCKED state");
+
+      rrScheduler.handleProcessStateChange(current, ProcessState::FINISHED);
+      printTestResult(current->getState() == ProcessState::FINISHED, "Process should transition to FINISHED state");
+      
+      delete p;
+    }
+
+    void testExecutionCycle() {
+      color("yellow", "\nExecution Cycle Tests:", true);
+
+      RoundRobin rrScheduler;
+
+      Process* p = new Process("Process1", 1);
+      p->addInstruction("instruction1");
+      p->addInstruction("instruction2");
+      rrScheduler.addProcess(p);
+
+      rrScheduler.schedule();
+      rrScheduler.executeQuantum();
+
+      Process* current = rrScheduler.getCurrent();
+      printTestResult(current != nullptr, "Scheduler should have a current process during execution");
+      printTestResult(current->hasMoreInstrucions() == false, "All instructions should be executed after quantum");
+      printTestResult(current->getState() == ProcessState::FINISHED, "Process should be in FINISHED state after all instructions");
+
+      delete p;
+    }
+
+    void testDestructor() {
+      color("yellow", "\nDestructor Tests:", true);
+
+      RoundRobin* rrScheduler = new RoundRobin();
+      Process* p = new Process("Process1", 1);
+      rrScheduler->addProcess(p);
+      delete rrScheduler;
+
+      printTestResult(true, "Destructor executed without errors (memory checked with Valgrind)");
+      delete p;
+    }
+};
+
 class TestRunner {
 	public:
 		static void runAll() {
 			color("cyan", "\n=== Starting All Unit Tests ===\n", true);
 			
 			ProcessTests processTests;
+			TimerTests timerTests;
+			UITests uiTests;
+			FileParserTests fileParserTests;
+			SchedulerTests schedulerTests;
 
 			processTests.runAllTests();
+			timerTests.runAllTests();
+			uiTests.runAllTests();
+			fileParserTests.runAllTests();
+			schedulerTests.runAllTests();
 
 			color("cyan", "\n=== All Unit Tests Completed ===\n", true);
 		}
